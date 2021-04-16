@@ -20,7 +20,7 @@ const Body = styled.div`
   margin-top: 90px;
 `;
 
-const Layout = ({ children }) => {
+const Layout = ({ children, isShow }) => {
   const data = useStaticQuery(graphql`
     query SiteTitleQuery {
       site {
@@ -34,20 +34,26 @@ const Layout = ({ children }) => {
   return (
     <>
       <GlobalStyles />
-      <Body>
-        <Header />
+      {isShow ? (
+        <Body>
+          <Header />
+          <main>{children}</main>
+        </Body>
+      ) : (
         <main>{children}</main>
-      </Body>
+      )}
     </>
   );
 };
 
 Layout.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
+  isShow: PropTypes.bool
 };
 
 Layout.defaultProps = {
-  children: []
+  children: [],
+  isShow: true
 };
 
 export default Layout;
