@@ -1,0 +1,14 @@
+.rc-pagination-item-active,
+.rc-pagination-item:focus,
+.rc-pagination-item:hover {
+  border-color: #5c3ec2;
+  background: #5c3ec2;
+}
+
+.rc-pagination-item-active a,
+.rc-pagination-item a:hover,
+.rc-pagination-item:hover a,
+.rc-pagination-item-active:focus a,
+.rc-pagination-item-active:hover a {
+  color: #fff;
+}
