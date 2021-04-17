@@ -3,6 +3,8 @@ import { Link } from "gatsby";
 
 import Layout from "../components/layout";
 import SEO from "../components/seo";
+import Post from "../components/post";
+import Pagination from "../components/pagination";
 import SearchIcon from "../components/searchIcon";
 
 import styled from "styled-components";
@@ -54,7 +56,22 @@ const SVG = styled.div`
   text-align: center;
 `;
 
+const PaginationWrap = styled.div`
+  text-align: center;
+  padding: 10px 0;
+  padding: 0.625rem 0;
+`;
+
 const SearchPage = ({ location }) => {
+  //검색 버튼을 오른쪽에 하나 둬야 할거 같은데????
+  const [isSearched, setIsSearched] = useState(false);
+
+  const PER_PAGE = 10;
+  const [curPage, setCurPage] = useState(1);
+  const paginationHandler = current => {
+    setCurPage(current);
+  };
+
   return (
     <Layout isShow={false}>
       <SEO title="Search" />
@@ -71,17 +88,53 @@ const SearchPage = ({ location }) => {
           </Img>
           <Input placeholder={`제목을 입력하세요`} />
         </InputContainer>
-        <Content>게시판의 글을 검색하세요 </Content>
-        <SVG>
-          <SearchIcon
-            width={`40.005`}
-            height={`40.012`}
-            viewBox={`0 0 40.005 40.012`}
-            d={`M39.461,34.593,31.671,26.8a1.874,1.874,0,0,0-1.328-.547H29.069a16.246,16.246,0,1,0-2.813,2.813v1.274a1.874,1.874,0,0,0,.547,1.328l7.791,7.791a1.868,1.868,0,0,0,2.649,0l2.211-2.211A1.884,1.884,0,0,0,39.461,34.593ZM16.253,26.255a10,10,0,1,1,10-10A10,10,0,0,1,16.253,26.255Z`}
-            fill={`#212529`}
-            opacity={`0.358`}
-          />
-        </SVG>
+        {!isSearched ? (
+          <>
+            <Content>게시판의 글을 검색하세요 </Content>
+            <SVG>
+              <SearchIcon
+                width={`40.005`}
+                height={`40.012`}
+                viewBox={`0 0 40.005 40.012`}
+                d={`M39.461,34.593,31.671,26.8a1.874,1.874,0,0,0-1.328-.547H29.069a16.246,16.246,0,1,0-2.813,2.813v1.274a1.874,1.874,0,0,0,.547,1.328l7.791,7.791a1.868,1.868,0,0,0,2.649,0l2.211-2.211A1.884,1.884,0,0,0,39.461,34.593ZM16.253,26.255a10,10,0,1,1,10-10A10,10,0,0,1,16.253,26.255Z`}
+                fill={`#212529`}
+                opacity={`0.358`}
+              />
+            </SVG>{" "}
+          </>
+        ) : (
+          <>
+            <Post
+              title={`물어볼 때마다...`}
+              author={`익명의 사나이`}
+              createDate={`03.14`}
+              like={1442}
+              comment={70}
+            />
+            <Post
+              title={`진상 손님...`}
+              author={`익명의 사나이`}
+              createDate={`03.14`}
+              like={1442}
+              comment={70}
+            />
+            <Post
+              title={`옆에 싱싱마트...`}
+              author={`익명의 사나이`}
+              createDate={`03.14`}
+              like={1442}
+              comment={70}
+            />
+            <PaginationWrap>
+              <Pagination
+                current={curPage}
+                total={50}
+                pageSize={PER_PAGE}
+                onChange={paginationHandler}
+              />
+            </PaginationWrap>
+          </>
+        )}
       </Container>
     </Layout>
   );

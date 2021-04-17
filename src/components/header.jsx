@@ -67,7 +67,7 @@ const Header = ({ siteTitle }) => {
             fill={`#212529`}
           />
         </Search>
-        <Mypage to="#">MY</Mypage>
+        <Mypage to="/my">MY</Mypage>
         <Create to="/create">글쓰기</Create>
       </Right>
     </Container>

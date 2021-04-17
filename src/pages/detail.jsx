@@ -4,7 +4,6 @@ import { Link } from "gatsby";
 import Layout from "../components/layout";
 import SEO from "../components/seo";
 import Comment from "../components/comment";
-
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -17,6 +16,7 @@ const Post = styled.div``;
 
 const CurType = styled.div`
   font-size: 12px;
+  font-weight: bold;
   color: #5c3ec2;
 `;
 
@@ -120,7 +120,7 @@ const InputContainer = styled.div`
   width: 100%;
   border: 2px solid #ebebeb;
   box-shadow: 2px 2px 2px 2px gray;
-  margin-bottom: 5px;
+  margin-bottom: 2px;
   position: fixed;
   bottom: 0;
   left: 0;
@@ -181,7 +181,7 @@ const DetailPage = ({ location }) => {
                     xmlns="http://www.w3.org/2000/svg"
                     width="12.632"
                     height="9.742"
-                    viewBox="0 0 12.632 9.742"
+                    viewBox="0 0 13.632 9.742"
                   >
                     <path
                       id="_Color"
@@ -198,13 +198,13 @@ const DetailPage = ({ location }) => {
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="11.715"
-                    height="11.315"
-                    viewBox="0 0 11.715 11.315"
+                    height="10.315"
+                    viewBox="0 0 11.715 12.315"
                   >
                     <path
                       id="heart"
                       d="M9.234,32.672a2.485,2.485,0,0,0-3.732.313l-.394.467-.394-.467a2.485,2.485,0,0,0-3.732-.313,3.657,3.657,0,0,0-.2,4.786l1.358,1.614,2.512,2.985a.572.572,0,0,0,.906,0l.6-.716L9.43,37.458A3.655,3.655,0,0,0,9.234,32.672Z"
-                      transform="translate(0.749 -31.465)"
+                      transform="translate(0.749 -30.465)"
                       fill="#5c3ec2"
                       stroke="#5c3ec2"
                     />
@@ -218,12 +218,12 @@ const DetailPage = ({ location }) => {
                     xmlns="http://www.w3.org/2000/svg"
                     width="10.65"
                     height="11.028"
-                    viewBox="0 0 10.65 11.028"
+                    viewBox="0 0 10.65 12.028"
                   >
                     <path
                       id="comment-dots"
                       d="M5.325,32A5.225,5.225,0,0,0,0,37.12a4.971,4.971,0,0,0,1.186,3.217A6.562,6.562,0,0,1,.046,42.7a.223.223,0,0,0-.031.214.165.165,0,0,0,.152.118,4.366,4.366,0,0,0,2.925-1.265,5.48,5.48,0,0,0,2.234.478,5.124,5.124,0,1,0,0-10.24ZM2.662,37.908a.8.8,0,0,1,0-1.575.8.8,0,0,1,0,1.575Zm2.662,0a.8.8,0,0,1,0-1.575.8.8,0,0,1,0,1.575Zm2.662,0a.8.8,0,0,1,0-1.575.8.8,0,0,1,0,1.575Z"
-                      transform="translate(0 -32)"
+                      transform="translate(0 -31)"
                       fill="#5c3ec2"
                     />
                   </svg>
@@ -237,12 +237,12 @@ const DetailPage = ({ location }) => {
                   xmlns="http://www.w3.org/2000/svg"
                   width="12.952"
                   height="12.488"
-                  viewBox="0 0 12.952 12.488"
+                  viewBox="0 0 12.952 14.488"
                 >
                   <path
                     id="heart"
                     d="M10.779,32.752a2.991,2.991,0,0,0-4.355.349l-.46.52L5.5,33.1a2.99,2.99,0,0,0-4.355-.349,3.934,3.934,0,0,0-.231,5.33l4.516,5.123a.687.687,0,0,0,1.057,0l4.516-5.123A3.932,3.932,0,0,0,10.779,32.752Z"
-                    transform="translate(0.513 -31.465)"
+                    transform="translate(0.513 -29.3)"
                     fill="none"
                     stroke="#5c3ec2"
                   />

@@ -47,8 +47,9 @@ const Input = styled.input`
   border-radius: 4px;
 `;
 
-const Inputcaption = styled.div`
+const InputCaption = styled.div`
   font-size: 12px;
+  font-weight: bold;
   text-align: left;
   padding: 3px 5px;
 `;
@@ -65,16 +66,10 @@ const Button = styled(Link)`
   border-radius: 4px;
 `;
 
-// const Back = styled.div`
-//   width: 32px;
-//   height: 44px;
-// `;
-
 const SignupPage = () => {
   return (
     <Container>
       <GlobalStyles />
-      {/* <Back>◀</Back> */}
       <Title>Montent</Title>
       <SubTitle>방문해주셔서 감사합니다!</SubTitle>
       <SubContent>
@@ -82,19 +77,19 @@ const SignupPage = () => {
       </SubContent>
       <InputContainer>
         <OneInput>
-          <Inputcaption>이메일</Inputcaption>
+          <InputCaption>이메일</InputCaption>
           <Input placeholder={`이메일을 입력해주세요`} />
         </OneInput>
         <OneInput>
-          <Inputcaption>비밀번호</Inputcaption>
+          <InputCaption>비밀번호</InputCaption>
           <Input placeholder={`비밀번호를 입력해주세요`} />
         </OneInput>
         <OneInput>
-          <Inputcaption>비밀번호 확인</Inputcaption>
+          <InputCaption>비밀번호 확인</InputCaption>
           <Input placeholder={`비밀번호를 한번 더 입력해주세요`} />
         </OneInput>
         <OneInput>
-          <Inputcaption>닉네임</Inputcaption>
+          <InputCaption>닉네임</InputCaption>
           <Input placeholder={`사용하실 닉네임을 입력해주세요`} />
         </OneInput>
         <Button to="/signupfin">다음</Button>

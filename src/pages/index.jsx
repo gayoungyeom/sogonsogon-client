@@ -47,12 +47,12 @@ const IndexPage = ({ location }) => {
   // console.log(location);
   const [curType, setCurType] = useState("first");
 
-  const clickRegionHandler = () => {
+  const regionClickHandler = () => {
     console.log("region");
     setCurType("first");
   };
 
-  const clickBusinessHandler = () => {
+  const businessClickHandler = () => {
     console.log("business");
     setCurType("second");
   };
@@ -68,8 +68,8 @@ const IndexPage = ({ location }) => {
           firstSubCategory={`서초구 방배동`}
           secondCategory={`내 업종`}
           secondSubCategory={`외식업`}
-          firstHandler={clickRegionHandler}
-          secondHandler={clickBusinessHandler}
+          firstHandler={regionClickHandler}
+          secondHandler={businessClickHandler}
           curType={curType}
         />
 

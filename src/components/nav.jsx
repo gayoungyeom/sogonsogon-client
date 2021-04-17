@@ -16,6 +16,9 @@ const List = styled.ul`
 `;
 
 const Item = styled.li`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 50%;
   height: 98%;
   list-style: none;
@@ -24,16 +27,20 @@ const Item = styled.li`
   color: ${props => (props.current ? "#fff" : "#000")};
   background: ${props => (props.current ? "#5c3ec2" : "#fff")};
   cursor: pointer;
+  position: relative;
 `;
 
 const Category = styled.div`
   font-size: 10px;
+  font-weight: bold;
+  position: absolute;
+  top: 10px;
+  left: 10px;
 `;
 
 const CategoryDetail = styled.div`
   font-size: 13px;
   font-weight: bold;
-  text-align: center;
 `;
 
 //-----logic-----
@@ -63,9 +70,9 @@ const Nav = ({
 };
 
 Nav.prototype = {
-  firstCategory: PropTypes.string.isRequired,
+  firstCategory: PropTypes.string,
   firstSubCategory: PropTypes.string.isRequired,
-  secondCategory: PropTypes.string.isRequired,
+  secondCategory: PropTypes.string,
   secondSubCategory: PropTypes.string.isRequired,
   firstHandler: PropTypes.func,
   secondHandler: PropTypes.func

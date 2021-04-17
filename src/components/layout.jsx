@@ -40,7 +40,9 @@ const Layout = ({ children, isShow }) => {
           <main>{children}</main>
         </Body>
       ) : (
-        <main>{children}</main>
+        <Body>
+          <main>{children}</main>
+        </Body>
       )}
     </>
   );

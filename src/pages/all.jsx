@@ -45,18 +45,34 @@ const AllPage = ({ location }) => {
 
   const PER_PAGE = 10;
   const [curPage, setCurPage] = useState(1);
-
-  const handlePageClick = current => {
+  const paginationHandler = current => {
     setCurPage(current);
+  };
+
+  const [curType, setCurType] = useState("first");
+  const regionClickHandler = () => {
+    console.log("region");
+    setCurType("first");
+  };
+  const businessClickHandler = () => {
+    console.log("business");
+    setCurType("second");
   };
 
   return (
     <Layout>
-      <SEO title="Home" />
+      <SEO title="All" />
       <Container>
         <Ads>광고</Ads>
-
-        <Nav category={`내 지역`} subCategory={`서초구 방배동`} />
+        <Nav
+          firstCategory={`내 지역`}
+          firstSubCategory={`서초구 방배동`}
+          secondCategory={`내 업종`}
+          secondSubCategory={`외식업`}
+          firstHandler={regionClickHandler}
+          secondHandler={businessClickHandler}
+          curType={curType}
+        />
 
         <ListContainer>
           <PostTitle>전체 게시글 📋</PostTitle>
@@ -77,7 +93,7 @@ const AllPage = ({ location }) => {
             current={curPage}
             total={50}
             pageSize={PER_PAGE}
-            onChange={handlePageClick}
+            onChange={paginationHandler}
           />
         </PaginationWrap>
       </Container>

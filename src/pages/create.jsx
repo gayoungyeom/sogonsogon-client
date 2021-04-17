@@ -20,7 +20,7 @@ const Title = styled.input`
   background: #f8f9fa;
   outline: none;
   border: 2px solid #fff;
-  padding: 12px;
+  padding: 13px;
   font-size: 13px;
 `;
 
@@ -32,8 +32,9 @@ const Content = styled.textarea`
   background: #f8f9fa;
   outline: none;
   border: 2px solid #fff;
-  padding: 12px;
+  padding: 13px;
   font-size: 13px;
+  resize: none;
 `;
 
 const BtnWrap = styled.div`
@@ -59,12 +60,12 @@ const SaveBtn = styled.button`
 const CreatePage = ({ location }) => {
   const [curType, setCurType] = useState("first");
 
-  const clickRegionHandler = () => {
+  const regionClickHandler = () => {
     console.log("region");
     setCurType("first");
   };
 
-  const clickBusinessHandler = () => {
+  const businessClickHandler = () => {
     console.log("business");
     setCurType("second");
   };
@@ -78,8 +79,8 @@ const CreatePage = ({ location }) => {
           firstSubCategory={`서초구 방배동`}
           secondCategory={`내 업종`}
           secondSubCategory={`외식업`}
-          firstHandler={clickRegionHandler}
-          secondHandler={clickBusinessHandler}
+          firstHandler={regionClickHandler}
+          secondHandler={businessClickHandler}
           curType={curType}
         />
         <Title placeholder={`제목을 입력해주세요`} />

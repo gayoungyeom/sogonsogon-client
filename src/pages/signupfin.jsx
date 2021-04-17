@@ -84,6 +84,7 @@ const Option = styled.option`
 
 const Inputcaption = styled.div`
   font-size: 12px;
+  font-weight: bold;
   text-align: left;
   padding: 3px 5px;
 `;
@@ -110,16 +111,10 @@ const Button = styled(Link)`
   border-radius: 4px;
 `;
 
-// const Back = styled.div`
-//   width: 32px;
-//   height: 44px;
-// `;
-
 const SignupFinPage = () => {
   return (
     <Container>
       <GlobalStyles />
-
       <Title>Montent</Title>
       <SubTitle>
         추가정보 선택, 사업자 등록증 사진을 추가하신 후 회원가입 요청을
