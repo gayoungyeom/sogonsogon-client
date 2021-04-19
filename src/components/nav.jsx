@@ -24,10 +24,12 @@ const Item = styled.li`
   list-style: none;
   margin: 0;
   padding: 10px;
-  color: ${props => (props.current ? "#fff" : "#000")};
-  background: ${props => (props.current ? "#5c3ec2" : "#fff")};
+  color: ${props => (props.current ? "#F8F9FA" : "#000")};
+  background: ${props => (props.current ? "#5c3ec2" : "#F8F9FA")};
   cursor: pointer;
   position: relative;
+  border-top: ${props => (!props.current ? "2px solid #e0e0e0" : null)};
+  border-bottom: ${props => (!props.current ? "2px solid #e0e0e0" : null)};
 `;
 
 const Category = styled.div`

@@ -151,6 +151,10 @@ const SVG = styled.span`
   padding: 3px;
 `;
 
+const Edit = styled(Link)`
+  color: #5c3ec2;
+`;
+
 const DetailPage = ({ location }) => {
   const testArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   return (

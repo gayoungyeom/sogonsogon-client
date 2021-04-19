@@ -4,40 +4,53 @@ import { Link } from "gatsby";
 import Layout from "../components/layout";
 import SEO from "../components/seo";
 import Nav from "../components/nav";
+import Post from "../components/post";
+import Pagination from "../components/pagination";
 
 import styled from "styled-components";
 
 const Container = styled.div`
-  margin-top: 0;
-  padding: 0;
+  /* background: #f8f9fa; */
+  /* padding-bottom: 100px; */
 `;
 
+//내 정보 수정
 const User = styled.div`
   font-size: 16px;
   color: #5c3ec2;
+  padding: 30px 0;
   text-align: center;
-  padding: 27px;
 `;
 
 const InfoContainer = styled.div`
-  padding: 30px;
+  padding-top: 10px;
   font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-top: 2px solid #fff;
+`;
+
+const EmailContainer = styled.div`
+  width: 315px;
 `;
 
 const EmailCaption = styled.span`
   font-weight: bold;
+  text-align: left;
+  padding: 10px 5px;
   padding-right: 20px;
 `;
 
 const Email = styled.span``;
 
 const InputContainer = styled.div`
-  margin-top: 33.5px;
+  margin-top: 20px;
 `;
 
 const OneInput = styled.div`
-  margin-top: 22px;
-  width: 100%;
+  margin-top: 10px;
+  width: 315px;
 `;
 
 const Input = styled.input`
@@ -53,7 +66,8 @@ const Input = styled.input`
 
 const InputCaption = styled.div`
   font-weight: bold;
-  padding-bottom: 10px;
+  text-align: left;
+  padding: 10px 5px;
 `;
 
 const EditBtn = styled.button`
@@ -65,6 +79,24 @@ const EditBtn = styled.button`
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;
   outline: none;
+  cursor: pointer;
+  opacity: ${props => (props.disabled ? 0.5 : null)};
+`;
+
+//내 활동 내역
+const SubTitle = styled.div`
+  padding: 12px;
+  font-size: 15px;
+  font-weight: bold;
+  background: #f8f9fa;
+  border-top: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+`;
+
+const PaginationWrap = styled.div`
+  text-align: center;
+  padding: 10px 0;
+  padding: 0.625rem 0;
 `;
 
 const MyPage = ({ location }) => {
@@ -84,6 +116,13 @@ const MyPage = ({ location }) => {
     setIsSetFirst(true);
   };
 
+  //pagination
+  const PER_PAGE = 10;
+  const [curPage, setCurPage] = useState(1);
+  const paginationHandler = current => {
+    setCurPage(current);
+  };
+
   return (
     <Layout>
       <SEO title="MY" />
@@ -95,30 +134,78 @@ const MyPage = ({ location }) => {
           secondHandler={listClickHandler}
           curType={curType}
         />
-        <User>몽뜨님</User>
-        <InfoContainer>
-          <EmailCaption>이메일</EmailCaption>
-          <Email>montent@email.com</Email>
-          <InputContainer>
-            <OneInput>
-              <InputCaption>닉네임</InputCaption>
-              <Input value={`몽뜨`} />
-              <EditBtn>변경</EditBtn>
-            </OneInput>
-            <OneInput>
-              <InputCaption>비밀번호</InputCaption>
-              <Input placeholder={`변경하실 비밀번호를 입력해주세요`} />
-              <EditBtn onClick={setFirstPassword}>변경</EditBtn>
-            </OneInput>
-            {isSetFirst ? (
+        {curType === "first" ? (
+          <InfoContainer>
+            <User>몽뜨님</User>
+            <EmailContainer>
+              <EmailCaption>이메일</EmailCaption>
+              <Email>montent@email.com</Email>
+            </EmailContainer>
+            <InputContainer>
               <OneInput>
-                <InputCaption>비밀번호 확인</InputCaption>
-                <Input placeholder={`비밀번호를 한번 더 입력해주세요`} />
-                <EditBtn onClick={setFirstPassword}>변경</EditBtn>
+                <InputCaption>닉네임</InputCaption>
+                <Input value={`몽뜨`} />
+                <EditBtn>변경</EditBtn>
               </OneInput>
-            ) : null}
-          </InputContainer>
-        </InfoContainer>
+              <OneInput>
+                <InputCaption>비밀번호</InputCaption>
+                <Input
+                  placeholder={`변경하실 비밀번호를 입력해주세요`}
+                  type={`password`}
+                />
+                <EditBtn
+                  onClick={setFirstPassword}
+                  disabled={isSetFirst ? true : false}
+                >
+                  변경
+                </EditBtn>
+              </OneInput>
+              {isSetFirst ? (
+                <OneInput>
+                  <InputCaption>비밀번호 확인</InputCaption>
+                  <Input
+                    placeholder={`비밀번호를 한번 더 입력해주세요`}
+                    type={`password`}
+                  />
+                  <EditBtn onClick={setFirstPassword}>변경</EditBtn>
+                </OneInput>
+              ) : null}
+            </InputContainer>
+          </InfoContainer>
+        ) : (
+          <>
+            <SubTitle>내가 쓴 게시글</SubTitle>
+            <Post
+              title={`물어볼 때마다...`}
+              author={`익명의 사나이`}
+              createDate={`03.14`}
+              like={1442}
+              comment={70}
+            />
+            <Post
+              title={`진상 손님...`}
+              author={`익명의 사나이`}
+              createDate={`03.14`}
+              like={1442}
+              comment={70}
+            />
+            <Post
+              title={`옆에 싱싱마트...`}
+              author={`익명의 사나이`}
+              createDate={`03.14`}
+              like={1442}
+              comment={70}
+            />
+            <PaginationWrap>
+              <Pagination
+                current={curPage}
+                total={50}
+                pageSize={PER_PAGE}
+                onChange={paginationHandler}
+              />
+            </PaginationWrap>
+          </>
+        )}
       </Container>
     </Layout>
   );

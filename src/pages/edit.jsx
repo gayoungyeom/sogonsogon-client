@@ -57,7 +57,7 @@ const SaveBtn = styled.button`
   cursor: pointer;
 `;
 
-const CreatePage = ({ location }) => {
+const EditPage = ({ location }) => {
   const [curType, setCurType] = useState("first");
 
   const regionClickHandler = () => {
@@ -72,7 +72,7 @@ const CreatePage = ({ location }) => {
 
   return (
     <Layout>
-      <SEO title="Create" />
+      <SEO title="Edit" />
       <Container>
         <Nav
           firstCategory={`내 지역`}
@@ -83,14 +83,22 @@ const CreatePage = ({ location }) => {
           secondHandler={businessClickHandler}
           curType={curType}
         />
-        <Title placeholder={`제목을 입력해주세요`} />
-        <Content placeholder={`내용을 입력해주세요`} />
+        <Title
+          placeholder={`제목을 입력해주세요`}
+          value={`물어볼 때마다 말이 달라지는 직원 어떻게 대처하시나요?`}
+        />
+        <Content
+          placeholder={`내용을 입력해주세요`}
+          value={`예전에 이렇게하라고 시켰는데 갑자기 그게 아니라고 다른 방식으로 한다던지, 본인이 말했던 걸 기억 못하고 계속해서 다른 변명만 내뱉는 직원분들이 많이 있으신가요?
+본인이 잘못 해놓고 제가 그렇게 말한적 없는 것처럼 말하는데 답답하기 그지없네요
+`}
+        />
         <BtnWrap>
-          <SaveBtn>등록</SaveBtn>
+          <SaveBtn>저장</SaveBtn>
         </BtnWrap>
       </Container>
     </Layout>
   );
 };
 
-export default CreatePage;
+export default EditPage;
