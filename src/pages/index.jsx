@@ -25,17 +25,15 @@ const ListContainer = styled.div`
 const PostList = styled.div``;
 
 const PostTitle = styled.div`
-  height: 10%;
+  height: 45px;
   background: #f8f9fa;
   padding: 10px;
   padding-left: 15px;
+  padding-top: 15px;
   font-size: 15px;
   font-weight: bold;
-`;
-
-const MoreWrap = styled.span`
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
 `;
 
 const More = styled(Link)`
@@ -77,7 +75,7 @@ const IndexPage = ({ location }) => {
           <PostTitle>베스트 게시글 👑</PostTitle>
           <PostList>
             <Post
-              title={`물어볼 때마다...`}
+              title={`물어볼 때마다 물어볼 때마다 물어볼 때마다 물...`}
               author={`익명의 사나이`}
               createDate={`03.14`}
               like={1442}
@@ -121,9 +119,7 @@ const IndexPage = ({ location }) => {
         <ListContainer>
           <PostTitle>
             전체 게시글 📋
-            <MoreWrap>
-              <More to="/all">더보기▶</More>
-            </MoreWrap>
+            <More to="/all">더보기▶</More>
           </PostTitle>
           <PostList>
             <Post

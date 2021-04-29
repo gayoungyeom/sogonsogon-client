@@ -70,10 +70,10 @@ const SignupPage = () => {
   return (
     <Container>
       <GlobalStyles />
-      <Title>Montent</Title>
+      <Title>소곤소곤</Title>
       <SubTitle>방문해주셔서 감사합니다!</SubTitle>
       <SubContent>
-        간단한 정보를 입력하신 후 Montent에서 소통해보세요 :)
+        간단한 정보를 입력하신 후 소곤소곤에서 소통해보세요 :)
       </SubContent>
       <InputContainer>
         <OneInput>

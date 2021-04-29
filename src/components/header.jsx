@@ -7,7 +7,6 @@ import styled from "styled-components";
 
 const Container = styled.div`
   width: 100%;
-  /* max-width: 960px; */
   height: 90px;
   display: flex;
   align-items: center;
@@ -18,6 +17,7 @@ const Container = styled.div`
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 999;
 `;
 
 //로고 나오면 background ulr(img)로 바꾸기
@@ -26,12 +26,18 @@ const Logo = styled(Link)`
   align-self: center;
   font-size: 28px;
   font-weight: bold;
+  @media screen and (min-width: 961px) {
+    padding-left: 18%;
+  }
 `;
 
 const Right = styled.span`
   display: flex;
   align-items: center;
   font-size: 12px;
+  @media screen and (min-width: 961px) {
+    padding-right: 18%;
+  }
 `;
 
 const Search = styled(Link)``;

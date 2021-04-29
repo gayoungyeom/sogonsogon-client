@@ -21,9 +21,13 @@ const Rank = styled.span`
 `;
 
 const PostSub = styled.div`
+  display: flex;
+  justify-content: space-between;
   font-size: 11px;
-  padding-top: 10px;
+  padding-top: 20px;
 `;
+
+const Left = styled.span``;
 
 const Author = styled.span``;
 
@@ -33,10 +37,7 @@ const Bar = styled.span`
 
 const CreateDate = styled.span``;
 
-const Right = styled.span`
-  display: flex;
-  justify-content: flex-end;
-`;
+const Right = styled.span``;
 
 const Span = styled.span``;
 
@@ -55,9 +56,11 @@ const Post = ({ title, author, createDate, like, comment, rank }) => {
           {title}
         </Title>
         <PostSub>
-          <Author>{author}</Author>
-          <Bar>|</Bar>
-          <CreateDate>{createDate}</CreateDate>
+          <Left>
+            <Author>{author}</Author>
+            <Bar>|</Bar>
+            <CreateDate>{createDate}</CreateDate>
+          </Left>
           <Right>
             <Span>
               <Emo>

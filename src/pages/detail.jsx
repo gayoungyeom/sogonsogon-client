@@ -49,15 +49,15 @@ const Content = styled.div`
   padding: 20px 0;
   line-height: 18px;
   border-top: 2px solid #fff;
-  border-bottom: 2px solid #fff;
 `;
 
 const CommuContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  height: 30px;
+  height: 40px;
   font-size: 11px;
-  padding: 15px 5px;
+  padding: 15px 0;
+  padding-right: 5px;
 `;
 
 const CommuRight = styled.span`
@@ -128,12 +128,15 @@ const InputContainer = styled.div`
 `;
 
 const Input = styled.input`
-  width: 90%;
+  width: 80%;
   height: 45px;
   font-size: 12px;
   padding: 25px;
   border: none;
   outline: none;
+  @media screen and (min-width: 961px) {
+    padding-left: 18%;
+  }
 `;
 
 const InputBtn = styled.button`
@@ -145,6 +148,9 @@ const InputBtn = styled.button`
   background: #fff;
   color: #5c3ec2;
   font-weight: bold;
+  @media screen and (min-width: 961px) {
+    padding-right: 18%;
+  }
 `;
 
 const SVG = styled.span`
@@ -258,8 +264,9 @@ const DetailPage = ({ location }) => {
         </Post>
         <CommentContainer>
           <CommentCnt>댓글 70</CommentCnt>
-          {testArr.map(() => (
+          {testArr.map(val => (
             <Comment
+              key={val}
               author={`조나단`}
               createDate={`3일전`}
               content={`말로 하시지 마시고 종이에 해야할 사항 적어서 전달하세요.`}

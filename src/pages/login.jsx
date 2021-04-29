@@ -47,7 +47,7 @@ const LoginPage = () => {
   return (
     <Container>
       <GlobalStyles />
-      <Title>Montent</Title>
+      <Title>소곤소곤</Title>
       <Input placeholder={`이메일을 입력해주세요`} />
       <Input placeholder={`비밀번호를 입력해주세요`} />
       <Button name={`login`} to="#">

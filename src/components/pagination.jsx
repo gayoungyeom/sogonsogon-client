@@ -13,8 +13,8 @@ const PaginationComponent = ({ current, total, pageSize, onChange }) => {
       current={current}
       total={total}
       pageSize={pageSize}
-      prevIcon={`이전`}
-      nextIcon={`다음`}
+      prevIcon={`<`}
+      nextIcon={`>`}
       onChange={onChange}
     />
   );

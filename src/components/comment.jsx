@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 
 const Container = styled.div`
-  padding: 10px 0;
+  padding: 15px 0;
   background: #f8f9fa;
   border-top: 2px solid #fff;
   border-bottom: 2px solid #fff;

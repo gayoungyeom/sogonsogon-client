@@ -27,6 +27,7 @@ const SubTitle = styled.div`
 const SubContent = styled.div`
   font-size: 9px;
   margin-bottom: 28px;
+  line-height: 12px;
 `;
 
 const InputContainer = styled.div`
@@ -115,14 +116,15 @@ const SignupFinPage = () => {
   return (
     <Container>
       <GlobalStyles />
-      <Title>Montent</Title>
+      <Title>소곤소곤</Title>
       <SubTitle>
-        추가정보 선택, 사업자 등록증 사진을 추가하신 후 회원가입 요청을
-        해주세요! <br />
+        추가정보 선택, 사업자 등록증 사진을 <br />
+        추가하신 후 회원가입 요청을 해주세요! <br />
         사업자 인증이 완료된 후 이용가능합니다 😊
       </SubTitle>
       <SubContent>
-        사업자 인증은 Montent 관리자에 의해 이루어지는 점 양해부탁드립니다.
+        사업자 인증은 소곤소곤 관리자에 의해 <br />
+        이루어지는 점 양해부탁드립니다.
       </SubContent>
       <InputContainer>
         <OneInput>
