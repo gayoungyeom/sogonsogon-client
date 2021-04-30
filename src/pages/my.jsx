@@ -53,7 +53,7 @@ const OneInput = styled.div`
   width: 315px;
 `;
 
-const Input = styled.input`
+const InputNick = styled.input`
   width: 265px;
   height: 45px;
   font-size: 13px;
@@ -64,13 +64,22 @@ const Input = styled.input`
   border-bottom-left-radius: 4px;
 `;
 
+const Input = styled.input`
+  width: 315px;
+  height: 45px;
+  font-size: 13px;
+  padding: 0 14px;
+  border: 2px solid #dededf;
+  border-radius: 4px;
+`;
+
 const InputCaption = styled.div`
   font-weight: bold;
   text-align: left;
   padding: 10px 5px;
 `;
 
-const EditBtn = styled.button`
+const EditBtnNick = styled.button`
   width: 50px;
   height: 45px;
   color: #fff;
@@ -80,7 +89,19 @@ const EditBtn = styled.button`
   border-bottom-right-radius: 4px;
   outline: none;
   cursor: pointer;
-  opacity: ${props => (props.disabled ? 0.5 : null)};
+`;
+
+const EditBtnPw = styled.button`
+  width: 315px;
+  height: 45px;
+  padding: 14px 0;
+  margin-top: 22px;
+  font-size: 14px;
+  color: #fff;
+  background: #5c3ec2;
+  border: #5c3ec2;
+  border-radius: 4px;
+  cursor: pointer;
 `;
 
 //내 활동 내역
@@ -110,10 +131,10 @@ const MyPage = ({ location }) => {
     setCurType("second");
   };
 
-  //첫 번째 비밀번호 입력
-  const [isSetFirst, setIsSetFirst] = useState(false);
-  const setFirstPassword = () => {
-    setIsSetFirst(true);
+  //비밀번호 변경
+  const [isChangePw, setIsChangePw] = useState(false);
+  const changePassword = () => {
+    setIsChangePw(true);
   };
 
   //pagination
@@ -144,32 +165,29 @@ const MyPage = ({ location }) => {
             <InputContainer>
               <OneInput>
                 <InputCaption>닉네임</InputCaption>
-                <Input value={`몽뜨`} />
-                <EditBtn>변경</EditBtn>
+                <InputNick value={`몽뜨`} />
+                <EditBtnNick>변경</EditBtnNick>
               </OneInput>
-              <OneInput>
-                <InputCaption>비밀번호</InputCaption>
-                <Input
-                  placeholder={`변경하실 비밀번호를 입력해주세요`}
-                  type={`password`}
-                />
-                <EditBtn
-                  onClick={setFirstPassword}
-                  disabled={isSetFirst ? true : false}
-                >
-                  변경
-                </EditBtn>
-              </OneInput>
-              {isSetFirst ? (
-                <OneInput>
-                  <InputCaption>비밀번호 확인</InputCaption>
-                  <Input
-                    placeholder={`비밀번호를 한번 더 입력해주세요`}
-                    type={`password`}
-                  />
-                  <EditBtn onClick={setFirstPassword}>변경</EditBtn>
-                </OneInput>
-              ) : null}
+
+              {isChangePw && (
+                <>
+                  <OneInput>
+                    <InputCaption>비밀번호</InputCaption>
+                    <Input
+                      placeholder={`변경하실 비밀번호를 입력해주세요`}
+                      type={`password`}
+                    />
+                  </OneInput>
+                  <OneInput>
+                    <InputCaption>비밀번호 확인</InputCaption>
+                    <Input
+                      placeholder={`비밀번호를 한번 더 입력해주세요`}
+                      type={`password`}
+                    />
+                  </OneInput>
+                </>
+              )}
+              <EditBtnPw onClick={changePassword}>비밀번호 변경하기</EditBtnPw>
             </InputContainer>
           </InfoContainer>
         ) : (

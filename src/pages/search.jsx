@@ -6,18 +6,31 @@ import SEO from "../components/seo";
 import Post from "../components/post";
 import Pagination from "../components/pagination";
 import SearchIcon from "../components/searchIcon";
+import back from "../assets/svgs/back.svg";
 
 import styled from "styled-components";
 
 const Container = styled.div`
   margin-top: 10px;
-  padding: 0 20px;
+  padding: 0 5px;
 `;
 
 const InputContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: baseline;
+  margin: 0 auto;
+`;
+
+const Back = styled(Link)`
+  width: 30px;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  background: url(${back}) center no-repeat;
+  @media screen and (min-width: 960px) {
+    display: none;
+  }
 `;
 
 const Img = styled.div`
@@ -34,7 +47,6 @@ const Img = styled.div`
 
 const Input = styled.input`
   width: 90%;
-  /* width: 320px; */
   height: 45px;
   font-size: 12px;
   background: #f8f9fa;
@@ -43,6 +55,20 @@ const Input = styled.input`
   border-bottom-right-radius: 4px;
   padding: 10px;
   outline: none;
+`;
+
+const Search = styled.button`
+  width: 80px;
+  font-size: 14px;
+  color: #fff;
+  background: #5c3ec2;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 5px;
+  @media screen and (max-width: 960px) {
+    display: none;
+  }
 `;
 
 const Content = styled.div`
@@ -77,6 +103,7 @@ const SearchPage = ({ location }) => {
       <SEO title="Search" />
       <Container>
         <InputContainer>
+          <Back to="/" />
           <Img>
             <SearchIcon
               width={`14.344`}
@@ -87,6 +114,7 @@ const SearchPage = ({ location }) => {
             />
           </Img>
           <Input placeholder={`제목을 입력하세요`} />
+          <Search>검색</Search>
         </InputContainer>
         {!isSearched ? (
           <>

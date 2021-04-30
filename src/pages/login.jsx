@@ -6,8 +6,7 @@ import GlobalStyles from "../components/globalstyles";
 
 const Container = styled.div`
   width: cal(100% - 100px);
-  margin: 160px 40px;
-  margin: 10rem 2.5rem;
+  margin: 100px 40px;
 `;
 
 const Title = styled.div`
@@ -50,10 +49,10 @@ const LoginPage = () => {
       <Title>소곤소곤</Title>
       <Input placeholder={`이메일을 입력해주세요`} />
       <Input placeholder={`비밀번호를 입력해주세요`} />
-      <Button name={`login`} to="#">
+      <Button name="login" to="#">
         로그인
       </Button>
-      <Button name={`signup`} to="/signup">
+      <Button name="signup" to="/signup">
         회원가입
       </Button>
     </Container>

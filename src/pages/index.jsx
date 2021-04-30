@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { Link } from "gatsby";
+import styled from "styled-components";
 
 import Layout from "../components/layout";
 import SEO from "../components/seo";
 import Post from "../components/post";
 import Nav from "../components/nav";
-
-import styled from "styled-components";
+import crownIcon from "../assets/svgs/crown.svg";
+import boardIcon from "../assets/svgs/board.svg";
 
 const Container = styled.div`
   margin-top: 0;
@@ -24,7 +25,7 @@ const ListContainer = styled.div`
 
 const PostList = styled.div``;
 
-const PostTitle = styled.div`
+const PostTitleWrap = styled.div`
   height: 45px;
   background: #f8f9fa;
   padding: 10px;
@@ -34,6 +35,16 @@ const PostTitle = styled.div`
   font-weight: bold;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+`;
+
+const PostTitle = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const Svg = styled.span`
+  margin-left: 8px;
 `;
 
 const More = styled(Link)`
@@ -42,7 +53,6 @@ const More = styled(Link)`
 `;
 
 const IndexPage = ({ location }) => {
-  // console.log(location);
   const [curType, setCurType] = useState("first");
 
   const regionClickHandler = () => {
@@ -72,7 +82,14 @@ const IndexPage = ({ location }) => {
         />
 
         <ListContainer>
-          <PostTitle>베스트 게시글 👑</PostTitle>
+          <PostTitleWrap>
+            <PostTitle>
+              베스트 게시글
+              <Svg>
+                <object type="image/svg+xml" data={crownIcon} />
+              </Svg>
+            </PostTitle>
+          </PostTitleWrap>
           <PostList>
             <Post
               title={`물어볼 때마다 물어볼 때마다 물어볼 때마다 물...`}
@@ -117,10 +134,15 @@ const IndexPage = ({ location }) => {
           </PostList>
         </ListContainer>
         <ListContainer>
-          <PostTitle>
-            전체 게시글 📋
-            <More to="/all">더보기▶</More>
-          </PostTitle>
+          <PostTitleWrap>
+            <PostTitle>
+              전체 게시글
+              <Svg>
+                <object type="image/svg+xml" data={boardIcon} />
+              </Svg>
+            </PostTitle>
+            <More to="/all">더보기 &gt;</More>
+          </PostTitleWrap>
           <PostList>
             <Post
               title={`물어볼 때마다...`}

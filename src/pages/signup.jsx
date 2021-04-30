@@ -6,8 +6,7 @@ import GlobalStyles from "../components/globalstyles";
 
 const Container = styled.div`
   width: cal(100% - 100px);
-  margin: 160px 40px;
-  margin: 10rem 2.5rem;
+  margin: 100px 40px;
   text-align: center;
 `;
 
@@ -25,7 +24,7 @@ const SubTitle = styled.div`
 
 const SubContent = styled.div`
   font-size: 9px;
-  margin-bottom: 28px;
+  margin-bottom: 18px;
 `;
 
 const InputContainer = styled.div`
@@ -35,7 +34,7 @@ const InputContainer = styled.div`
 `;
 
 const OneInput = styled.div`
-  margin-top: 10px;
+  margin-top: 15px;
 `;
 
 const Input = styled.input`
@@ -51,7 +50,7 @@ const InputCaption = styled.div`
   font-size: 12px;
   font-weight: bold;
   text-align: left;
-  padding: 3px 5px;
+  padding: 5px;
 `;
 
 const Button = styled(Link)`
@@ -61,8 +60,8 @@ const Button = styled(Link)`
   margin-top: 24px;
   font-size: 14px;
   color: #fff;
-  background: #5c3ec2;
-  border: #5c3ec2;
+  background: ${props => (props.name === "next" ? "#5c3ec2" : "#000")};
+  border: ${props => (props.name === "cancel" ? "#5c3ec2" : "#000")};
   border-radius: 4px;
 `;
 
@@ -92,7 +91,12 @@ const SignupPage = () => {
           <InputCaption>닉네임</InputCaption>
           <Input placeholder={`사용하실 닉네임을 입력해주세요`} />
         </OneInput>
-        <Button to="/signupfin">다음</Button>
+        <Button name="next" to="/signupfin">
+          다음
+        </Button>
+        <Button name="cancel" to="/login">
+          뒤로
+        </Button>
       </InputContainer>
     </Container>
   );

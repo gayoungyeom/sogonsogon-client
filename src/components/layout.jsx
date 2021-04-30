@@ -17,7 +17,7 @@ import "./layout.css";
 const Body = styled.div`
   margin: 0 auto;
   max-width: 960px; //테블릿 size
-  margin-top: 90px;
+  margin-top: ${props => props.isShow && "90px"};
 `;
 
 const Layout = ({ children, isShow }) => {
@@ -34,16 +34,10 @@ const Layout = ({ children, isShow }) => {
   return (
     <>
       <GlobalStyles />
-      {isShow ? (
-        <Body>
-          <Header />
-          <main>{children}</main>
-        </Body>
-      ) : (
-        <Body>
-          <main>{children}</main>
-        </Body>
-      )}
+      <Body isShow={isShow}>
+        {isShow && <Header />}
+        <main>{children}</main>
+      </Body>
     </>
   );
 };

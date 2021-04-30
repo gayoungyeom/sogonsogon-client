@@ -20,6 +20,7 @@
     "rc-pagination": "^3.1.6",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-dropzone": "^11.3.2",
     "react-helmet": "^6.1.0",
     "styled-components": "^5.2.3",
     "styled-reset": "^4.3.4"

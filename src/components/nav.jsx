@@ -3,13 +3,12 @@ import { Link } from "gatsby";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
-//-----style-----
 const Container = styled.div`
   width: 100%;
 `;
 
 const List = styled.ul`
-  height: 58px;
+  height: 68px;
   display: flex;
   align-items: center;
   margin: 0;
@@ -28,8 +27,8 @@ const Item = styled.li`
   background: ${props => (props.current ? "#5c3ec2" : "#F8F9FA")};
   cursor: pointer;
   position: relative;
-  border-top: ${props => (!props.current ? "2px solid #e0e0e0" : null)};
-  border-bottom: ${props => (!props.current ? "2px solid #e0e0e0" : null)};
+  border-top: 5px solid #fff;
+  border-bottom: 5px solid #fff;
 `;
 
 const Category = styled.div`
@@ -45,7 +44,6 @@ const CategoryDetail = styled.div`
   font-weight: bold;
 `;
 
-//-----logic-----
 const Nav = ({
   firstCategory,
   firstSubCategory,
