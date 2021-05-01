@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { Link } from "gatsby";
 
+import styled from "styled-components";
+
 import Layout from "../components/layout";
 import SEO from "../components/seo";
 import Post from "../components/post";
 import Nav from "../components/nav";
 import Pagination from "../components/pagination";
-
-import styled from "styled-components";
+import PostTitle from "../components/postTitle";
+import boardIcon from "../assets/svgs/board.svg";
 
 const Container = styled.div`
   margin-top: 0;
@@ -19,20 +21,9 @@ const Ads = styled.div`
   background: #bdc3c7;
 `;
 
-const ListContainer = styled.div`
-  /* height: 442px; */
-`;
+const ListContainer = styled.div``;
 
 const PostList = styled.div``;
-
-const PostTitle = styled.div`
-  height: 10%;
-  background: #f8f9fa;
-  padding: 10px;
-  padding-left: 15px;
-  font-size: 15px;
-  font-weight: bold;
-`;
 
 const PaginationWrap = styled.div`
   text-align: center;
@@ -75,7 +66,7 @@ const AllPage = ({ location }) => {
         />
 
         <ListContainer>
-          <PostTitle>전체 게시글 📋</PostTitle>
+          <PostTitle title="전체 게시글" svg={boardIcon} />
           <PostList>
             {testArr.map(() => (
               <Post

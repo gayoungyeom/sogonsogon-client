@@ -60,6 +60,7 @@ const Content = styled.div`
 const CommuContainer = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   height: 40px;
   font-size: 11px;
   padding: 15px 0;
@@ -80,7 +81,9 @@ const Likes = styled.span`
 const Comments = styled.span``;
 
 const LikeBtn = styled.button`
-  align-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 65px;
   height: 26px;
   color: #5c3ec2;
@@ -149,7 +152,6 @@ const Input = styled.input`
   padding: 25px;
   border: none;
   outline: none;
-  background: #f8f9fa;
 `;
 
 const InputBtn = styled.button`

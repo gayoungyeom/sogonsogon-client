@@ -8,6 +8,7 @@ import Post from "../components/post";
 import Nav from "../components/nav";
 import crownIcon from "../assets/svgs/crown.svg";
 import boardIcon from "../assets/svgs/board.svg";
+import PostTitle from "../components/postTitle";
 
 const Container = styled.div`
   margin-top: 0;
@@ -24,33 +25,6 @@ const ListContainer = styled.div`
 `;
 
 const PostList = styled.div``;
-
-const PostTitleWrap = styled.div`
-  height: 45px;
-  background: #f8f9fa;
-  padding: 10px;
-  padding-left: 15px;
-  padding-top: 15px;
-  font-size: 15px;
-  font-weight: bold;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const PostTitle = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const Svg = styled.span`
-  margin-left: 8px;
-`;
-
-const More = styled(Link)`
-  font-size: 11px;
-  padding-right: 10px;
-`;
 
 const IndexPage = ({ location }) => {
   const [curType, setCurType] = useState("first");
@@ -82,14 +56,7 @@ const IndexPage = ({ location }) => {
         />
 
         <ListContainer>
-          <PostTitleWrap>
-            <PostTitle>
-              베스트 게시글
-              <Svg>
-                <object type="image/svg+xml" data={crownIcon} />
-              </Svg>
-            </PostTitle>
-          </PostTitleWrap>
+          <PostTitle title="베스트 게시글" svg={crownIcon} />
           <PostList>
             <Post
               title={`물어볼 때마다 물어볼 때마다 물어볼 때마다 물...`}
@@ -134,15 +101,7 @@ const IndexPage = ({ location }) => {
           </PostList>
         </ListContainer>
         <ListContainer>
-          <PostTitleWrap>
-            <PostTitle>
-              전체 게시글
-              <Svg>
-                <object type="image/svg+xml" data={boardIcon} />
-              </Svg>
-            </PostTitle>
-            <More to="/all">더보기 &gt;</More>
-          </PostTitleWrap>
+          <PostTitle title="전체 게시글" svg={boardIcon} isMore={true} />
           <PostList>
             <Post
               title={`물어볼 때마다...`}
