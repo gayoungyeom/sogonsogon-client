@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "gatsby";
-import styled from "styled-components";
 
+import styled from "styled-components";
+import { useDispatch } from "react-redux";
+
+import * as commonActions from "../store/modules/common";
 import Layout from "../components/layout";
 import SEO from "../components/seo";
 import Post from "../components/post";
@@ -27,6 +30,16 @@ const ListContainer = styled.div`
 const PostList = styled.div``;
 
 const IndexPage = ({ location }) => {
+  // const dispatch = useDispatch();
+  // const setCurPath = useCallback(
+  //   () => dispatch(commonActions.getPath(location.pathname)),
+  //   [dispatch]
+  // );
+
+  // useEffect(() => {
+  //   setCurPath(location.pathname);
+  // }, []);
+
   const [curType, setCurType] = useState("first");
 
   const regionClickHandler = () => {

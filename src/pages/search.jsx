@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "gatsby";
+import { Link, navigate } from "gatsby";
 
 import Layout from "../components/layout";
 import SEO from "../components/seo";
@@ -22,11 +22,13 @@ const InputContainer = styled.div`
   margin: 0 auto;
 `;
 
-const Back = styled(Link)`
+const Back = styled.button`
   width: 30px;
   padding: 5px;
   display: flex;
   align-items: center;
+  border: none;
+  cursor: pointer;
   background: url(${back}) center no-repeat;
   @media screen and (min-width: 960px) {
     display: none;
@@ -103,7 +105,7 @@ const SearchPage = ({ location }) => {
       <SEO title="Search" />
       <Container>
         <InputContainer>
-          <Back to="/" />
+          <Back onClick={() => navigate(-1)} />
           <Img>
             <SearchIcon
               width={`14.344`}

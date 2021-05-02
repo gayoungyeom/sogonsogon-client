@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "gatsby";
+
+import styled from "styled-components";
 
 import Layout from "../components/layout";
 import SEO from "../components/seo";
 import Nav from "../components/nav";
-
-import styled from "styled-components";
 
 const Container = styled.div`
   margin-top: 0;
@@ -71,7 +71,7 @@ const CreatePage = ({ location }) => {
   };
 
   return (
-    <Layout>
+    <Layout isBack={true}>
       <SEO title="Create" />
       <Container>
         <Nav

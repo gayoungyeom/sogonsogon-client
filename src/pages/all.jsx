@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "gatsby";
 
 import styled from "styled-components";
+import { useDispatch } from "react-redux";
 
+import * as commonActions from "../store/modules/common";
 import Layout from "../components/layout";
 import SEO from "../components/seo";
 import Post from "../components/post";
@@ -51,7 +53,7 @@ const AllPage = ({ location }) => {
   };
 
   return (
-    <Layout>
+    <Layout isBack={true}>
       <SEO title="All" />
       <Container>
         <Ads>광고</Ads>

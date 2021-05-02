@@ -1,11 +1,13 @@
-import * as React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "gatsby";
 
+import styled from "styled-components";
+import { useDispatch } from "react-redux";
+
+import * as commonActions from "../store/modules/common";
 import Layout from "../components/layout";
 import SEO from "../components/seo";
 import Comment from "../components/comment";
-import styled from "styled-components";
-
 import viewIcon from "../assets/svgs/view.svg";
 import heartIcon from "../assets/svgs/heart.svg";
 import commentIcon from "../assets/svgs/comment.svg";
@@ -175,7 +177,7 @@ const Edit = styled(Link)`
 const DetailPage = ({ location }) => {
   const testArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   return (
-    <Layout>
+    <Layout isBack={true}>
       <SEO title="PostDetail" />
       <Container>
         <Post>

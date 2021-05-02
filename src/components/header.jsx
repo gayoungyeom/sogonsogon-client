@@ -1,9 +1,11 @@
 import * as React from "react";
-import { Link } from "gatsby";
+import { Link, navigate } from "gatsby";
 import PropTypes from "prop-types";
 import SearchIcon from "./searchIcon";
 
 import styled from "styled-components";
+import back from "../assets/svgs/back.svg";
+import { useSelector } from "react-redux";
 
 const Container = styled.div`
   width: 100%;
@@ -25,6 +27,18 @@ const Wrap = styled.div`
   padding: 1.45rem 1.0875rem;
 `;
 
+const Back = styled.button`
+  width: 30px;
+  height: 30px;
+  padding: 5px;
+  border: none;
+  cursor: pointer;
+  background: url(${back}) center no-repeat;
+  @media screen and (min-width: 960px) {
+    display: none;
+  }
+`;
+
 //로고 나오면 background ulr(img)로 바꾸기
 const Logo = styled(Link)`
   display: inline-block;
@@ -33,7 +47,7 @@ const Logo = styled(Link)`
   font-weight: bold;
 `;
 
-const Right = styled.span`
+const Span = styled.span`
   display: flex;
   align-items: center;
   font-size: 12px;
@@ -58,12 +72,16 @@ const Create = styled(Link)`
   border-radius: 3px;
 `;
 
-const Header = ({ siteTitle }) => {
+const Header = ({ siteTitle, isBack }) => {
+  // const prevPath = useSelector(({ common }) => common.path);
   return (
     <Container>
       <Wrap>
-        <Logo to="/">소곤소곤</Logo>
-        <Right>
+        <Span>
+          {isBack && <Back onClick={() => navigate(-1)} />}
+          <Logo to="/">소곤소곤</Logo>
+        </Span>
+        <Span>
           <Search to="/search">
             <SearchIcon
               width={`12.558`}
@@ -75,18 +93,20 @@ const Header = ({ siteTitle }) => {
           </Search>
           <Mypage to="/my">MY</Mypage>
           <Create to="/create">글쓰기</Create>
-        </Right>
+        </Span>
       </Wrap>
     </Container>
   );
 };
 
 Header.propTypes = {
-  siteTitle: PropTypes.string
+  siteTitle: PropTypes.string,
+  isBack: PropTypes.bool
 };
 
 Header.defaultProps = {
-  siteTitle: ``
+  siteTitle: ``,
+  isBack: false
 };
 
 export default Header;
