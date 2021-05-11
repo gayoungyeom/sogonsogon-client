@@ -5,6 +5,8 @@ import styled from "styled-components";
 import { useDispatch } from "react-redux";
 
 import * as commonActions from "../store/modules/common";
+import { get } from "../utils/http";
+
 import Layout from "../components/layout";
 import SEO from "../components/seo";
 import Post from "../components/post";
@@ -36,9 +38,15 @@ const IndexPage = ({ location }) => {
   //   [dispatch]
   // );
 
-  // useEffect(() => {
-  //   setCurPath(location.pathname);
-  // }, []);
+  const getBestPosts = () =>
+    get("/", () => {
+      console.log("getposts");
+    });
+
+  useEffect(() => {
+    // setCurPath(location.pathname);
+    getBestPosts();
+  }, []);
 
   const [curType, setCurType] = useState("first");
 

@@ -1,8 +1,11 @@
-import React from "react";
-import { Link } from "gatsby";
+import React, { useCallback, useState } from "react";
+import { Link, navigate } from "gatsby";
 
 import styled from "styled-components";
 import GlobalStyles from "../components/globalstyles";
+import * as signupActions from "../store/modules/signup";
+
+import { useDispatch, useSelector } from "react-redux";
 
 const Container = styled.div`
   width: cal(100% - 100px);
@@ -53,19 +56,57 @@ const InputCaption = styled.div`
   padding: 5px;
 `;
 
-const Button = styled(Link)`
+const Button = styled.button`
+  display: block;
   width: 290px;
   height: 45px;
-  padding: 14px 0;
-  margin-top: 24px;
+  margin-top: 22px;
   font-size: 14px;
   color: #fff;
   background: ${props => (props.name === "next" ? "#5c3ec2" : "#000")};
-  border: ${props => (props.name === "cancel" ? "#5c3ec2" : "#000")};
+  border: ${props => (props.name === "next" ? "#5c3ec2" : "#000")};
   border-radius: 4px;
+  cursor: pointer;
+  &:hover {
+    font-size: 15px;
+  }
 `;
 
 const SignupPage = () => {
+  const dispatch = useDispatch();
+  const email = useSelector(({ signup }) => signup.email);
+  const password = useSelector(({ signup }) => signup.password);
+  const password2 = useSelector(({ signup }) => signup.password2);
+  const nickName = useSelector(({ signup }) => signup.nickName);
+
+  const onChangeInput = useCallback(e => {
+    dispatch(
+      signupActions.setInfo({ key: e.target.name, value: e.target.value })
+    );
+  }, []);
+
+  const checkFillInput = () => {
+    if (email === "" || password === "" || password2 === "" || nickName === "")
+      return false;
+    else return true;
+  };
+
+  const checkPassword = () => {
+    if (password === password2) return true;
+    else return false;
+  };
+
+  const onClickNext = useCallback(() => {
+    //모든 정보 입력되었는지 확인후 네비게이트
+    if (!checkFillInput()) {
+      alert("모든 칸을 입력해주세요.");
+    } else if (!checkPassword()) {
+      alert("비밀번호가 일치하지 않습니다.");
+    } else {
+      navigate("/signupfin");
+    }
+  }, [email, password, password2, nickName]);
+
   return (
     <Container>
       <GlobalStyles />
@@ -77,24 +118,46 @@ const SignupPage = () => {
       <InputContainer>
         <OneInput>
           <InputCaption>이메일</InputCaption>
-          <Input placeholder={`이메일을 입력해주세요`} />
+          <Input
+            placeholder="이메일을 입력해주세요"
+            name="email"
+            type="text"
+            onChange={onChangeInput}
+          />
         </OneInput>
         <OneInput>
           <InputCaption>비밀번호</InputCaption>
-          <Input placeholder={`비밀번호를 입력해주세요`} />
+          <Input
+            placeholder="비밀번호를 입력해주세요. 예) 123456"
+            name="password"
+            type="password"
+            maxLength="6"
+            onChange={onChangeInput}
+          />
         </OneInput>
         <OneInput>
           <InputCaption>비밀번호 확인</InputCaption>
-          <Input placeholder={`비밀번호를 한번 더 입력해주세요`} />
+          <Input
+            placeholder="비밀번호를 한번 더 입력해주세요"
+            name="password2"
+            type="password"
+            maxLength="6"
+            onChange={onChangeInput}
+          />
         </OneInput>
         <OneInput>
           <InputCaption>닉네임</InputCaption>
-          <Input placeholder={`사용하실 닉네임을 입력해주세요`} />
+          <Input
+            placeholder="사용하실 닉네임을 입력해주세요"
+            name="nickName"
+            type="text"
+            onChange={onChangeInput}
+          />
         </OneInput>
-        <Button name="next" to="/signupfin">
+        <Button name="next" onClick={onClickNext}>
           다음
         </Button>
-        <Button name="cancel" to="/login">
+        <Button name="cancel" onClick={() => navigate("/login")}>
           뒤로
         </Button>
       </InputContainer>

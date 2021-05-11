@@ -1,10 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import { Link } from "gatsby";
 import styled from "styled-components";
 
 import GlobalStyles from "../components/globalstyles";
 import MyDropzone from "../components/dropzone";
 import cameraIcon from "../assets/svgs/camera.svg";
+import * as signupActions from "../store/modules/signup";
+import * as commonActions from "../store/modules/common";
+
+import { get, signup } from "../utils/http";
+import { useDispatch, useSelector } from "react-redux";
 
 const Container = styled.div`
   width: cal(100% - 100px);
@@ -76,7 +81,6 @@ const SelectRegion = styled.select`
   padding: 0 14px;
   border: 2px solid #dededf;
   border-radius: 4px;
-  /* color: #b5b5b5; */
 `;
 
 const Option = styled.option`
@@ -109,30 +113,82 @@ const Object = styled.object`
   margin-right: 5px;
 `;
 
-const Button = styled(Link)`
+const Button = styled.button`
+  display: block;
   width: 290px;
   height: 45px;
-  padding: 14px 0;
-  margin-top: 24px;
+  margin-top: 22px;
   font-size: 14px;
   color: #fff;
   background: ${props => (props.name === "signup" ? "#5c3ec2" : "#000")};
   border: ${props => (props.name === "signup" ? "#5c3ec2" : "#000")};
   border-radius: 4px;
+  cursor: pointer;
+  &:hover {
+    font-size: 15px;
+  }
 `;
 
 const SignupFinPage = () => {
+  const dispatch = useDispatch();
+  const sector = useSelector(({ signup }) => signup.sector);
+  const region = useSelector(({ signup }) => signup.region);
+  const image = useSelector(({ signup }) => signup.image);
+
+  const onChangeInput = useCallback(e => {
+    dispatch(
+      signupActions.setInfo({ key: e.target.name, value: e.target.value })
+    );
+  }, []);
+
+  const [sectorList, setSectorList] = useState([]);
+  const [regionList1, setRegionList1] = useState([]);
+  const [regionList2, setRegionList2] = useState([]);
+  const [regionList3, setRegionList3] = useState([]);
+
+  const getSectorList = useCallback(() => {
+    get(`/user/selectSectors`, data => {
+      setSectorList(data.sector_list);
+    });
+  }, []);
+
+  const getRegionList1 = useCallback(() => {
+    get(`/user/selectregion1`, data => {
+      setRegionList1(data.region_list1);
+    });
+  }, []);
+
+  useEffect(() => {
+    getSectorList();
+    getRegionList1();
+  }, [getSectorList, getRegionList1]);
+
   const [isFirstSelected, setIsFirstSelected] = useState(false);
   const [isSecondSelected, setIsSecondSelected] = useState(false);
 
-  const onSelectFirstRegion = e => {
-    console.log(e.target.value);
-    setIsFirstSelected(true);
-  };
-  const onSelectSecondRegion = e => {
-    console.log(e.target.value);
-    setIsSecondSelected(true);
-  };
+  const onSelectFirstRegion = useCallback(
+    e => {
+      const region1No = 1; //임시 변수
+      get(`/user/selectregion2?region_1_no=${region1No}`, data => {
+        setRegionList2(data.region_list2);
+        setIsFirstSelected(true);
+        //e.target.value 저장하기
+      });
+    },
+    [regionList1]
+  );
+
+  const onSelectSecondRegion = useCallback(
+    e => {
+      const region2No = 1; //임시 변수
+      get(`/user/selectregion3?region_2_no=${region2No}`, data => {
+        setRegionList3(data.region_list3);
+        setIsSecondSelected(true);
+        //e.target.value 저장하기
+      });
+    },
+    [regionList2]
+  );
 
   return (
     <Container>
@@ -150,20 +206,16 @@ const SignupFinPage = () => {
       <InputContainer>
         <OneInput>
           <Inputcaption>업종 선택</Inputcaption>
-          <Select>
-            <Option value="" defaultValue>
+          <Select name="sector" onChange={onChangeInput}>
+            <Option value="default" defaultValue>
               해당하는 업장을 선택해주세요
             </Option>
-            <Option value="">단란, 유흥주점</Option>
-            <Option value="">일반음식점</Option>
-            <Option value="">카페, 제과점</Option>
-            <Option value="">헤어/피부/미용</Option>
-            <Option value="">숙박업</Option>
-            <Option value="">슈퍼/ 편의점</Option>
-            <Option value="">체육시설업</Option>
-            <Option value="">의료업</Option>
-            <Option value="">교육업</Option>
-            <Option value="">기타업종</Option>
+            {sectorList &&
+              sectorList.map((sector, idx) => (
+                <Option key={idx} value={sector.sector_name}>
+                  {sector.sector_name}
+                </Option>
+              ))}
           </Select>
         </OneInput>
         <RegionContainer>
@@ -172,31 +224,43 @@ const SignupFinPage = () => {
             <Option value="default" defaultValue>
               시도
             </Option>
-            <Option value="seoul">서울특별시</Option>
+            {regionList1 &&
+              regionList1.map((region, idx) => (
+                <Option key={idx} value={region.bname}>
+                  {region.bname}
+                </Option>
+              ))}
           </SelectRegion>
 
           <SelectRegion
             onChange={onSelectSecondRegion}
             disabled={!isFirstSelected}
           >
-            <Option value="" defaultValue>
+            <Option value="default" defaultValue>
               시구군
             </Option>
-            <Option value="">강남구</Option>
-            <Option value="">강서구</Option>
-            <Option value="">강동구</Option>
-            <Option value="">송파구</Option>
-            <Option value="">서초구</Option>
+            {regionList2 &&
+              regionList2.map((region, idx) => (
+                <Option key={idx} value={region.bname}>
+                  {region.bname}
+                </Option>
+              ))}
           </SelectRegion>
 
-          <SelectRegion disabled={!isSecondSelected}>
-            <Option value="" defaultValue>
+          <SelectRegion
+            name="region"
+            onChange={onChangeInput}
+            disabled={!isSecondSelected}
+          >
+            <Option value="default" defaultValue>
               법정동
             </Option>
-            <Option value="">송파동</Option>
-            <Option value="">잠실동</Option>
-            <Option value="">석촌동</Option>
-            <Option value="">가락동</Option>
+            {regionList3 &&
+              regionList3.map((region, idx) => (
+                <Option key={idx} value={region.bname}>
+                  {region.bname}
+                </Option>
+              ))}
           </SelectRegion>
         </RegionContainer>
         <AddImg to="#">
