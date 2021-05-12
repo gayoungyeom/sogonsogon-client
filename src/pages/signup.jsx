@@ -3,7 +3,7 @@ import { Link, navigate } from "gatsby";
 
 import styled from "styled-components";
 import GlobalStyles from "../components/globalstyles";
-import * as signupActions from "../store/modules/signup";
+import * as userActions from "../store/modules/user";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -81,7 +81,7 @@ const SignupPage = () => {
 
   const onChangeInput = useCallback(e => {
     dispatch(
-      signupActions.setInfo({ key: e.target.name, value: e.target.value })
+      userActions.setInput({ key: e.target.name, value: e.target.value })
     );
   }, []);
 

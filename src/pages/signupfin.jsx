@@ -5,7 +5,7 @@ import styled from "styled-components";
 import GlobalStyles from "../components/globalstyles";
 import MyDropzone from "../components/dropzone";
 import cameraIcon from "../assets/svgs/camera.svg";
-import * as signupActions from "../store/modules/signup";
+import * as userActions from "../store/modules/user";
 import * as commonActions from "../store/modules/common";
 
 import { get, signup } from "../utils/http";
@@ -137,7 +137,7 @@ const SignupFinPage = () => {
 
   const onChangeInput = useCallback(e => {
     dispatch(
-      signupActions.setInfo({ key: e.target.name, value: e.target.value })
+      userActions.setInput({ key: e.target.name, value: e.target.value })
     );
   }, []);
 

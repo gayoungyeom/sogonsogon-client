@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useCallback, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useStaticQuery, graphql } from "gatsby";
 import styled from "styled-components";
@@ -6,6 +6,9 @@ import styled from "styled-components";
 import Header from "./header";
 import GlobalStyles from "./globalstyles";
 import "./layout.css";
+import { useDispatch } from "react-redux";
+import { useCookies } from "react-cookie";
+import * as commonActions from "../store/modules/common";
 
 const Body = styled.div`
   margin: 0 auto;
@@ -23,6 +26,19 @@ const Layout = ({ children, isShow, isBack }) => {
       }
     }
   `);
+
+  const dispatch = useDispatch();
+
+  const [cookies] = useCookies();
+  const tokenValidation = useCallback(() => {
+    //쿠키에 토큰이 있으면 리덕스에 저장
+    const token = cookies["token"];
+    dispatch(commonActions.setToken(token));
+  }, [cookies, dispatch]);
+
+  useEffect(() => {
+    tokenValidation();
+  }, [tokenValidation]);
 
   return (
     <>

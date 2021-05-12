@@ -10,35 +10,45 @@ const url = () => {
   else return devUrl;
 };
 
-const state = store.getState();
-const authToken = state.common.token;
-
-const headers = {
-  Authorization: `Bearer ${authToken}`
+const checkAuth = () => {
+  const state = store.getState();
+  const authToken = state.common.token;
+  return {
+    Authorization: `Bearer ${authToken}`
+  };
 };
 
 export const get = async (path, callback) => {
-  // commonActions.isLoading(true);
+  const headers = checkAuth();
   try {
     const res = await axios.get(`${url()}${path}`, {
       headers
     });
     callback(res.data);
-    // commonActions.isLoading(false);
   } catch (e) {
     console.log(e);
   }
-  // commonActions.isLoading(false);
 };
 
 export const post = async (path, data, callback) => {
+  const headers = checkAuth();
   try {
     const res = await axios.post(`${url()}${path}`, data, {
-      headers: {
-        Authorization: `Bearer ${authToken}`
-      }
+      headers
     });
-    return callback(res);
+    callback(res.data);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const put = async (path, data, callback) => {
+  const headers = checkAuth();
+  try {
+    const res = await axios.put(`${url()}${path}`, data, {
+      headers
+    });
+    callback(res.data);
   } catch (e) {
     console.log(e);
   }

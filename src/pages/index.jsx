@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Link } from "gatsby";
+import { Link, navigate } from "gatsby";
 
 import styled from "styled-components";
+import { useCookies } from "react-cookie";
 import { useDispatch } from "react-redux";
 
 import * as commonActions from "../store/modules/common";
@@ -11,9 +12,9 @@ import Layout from "../components/layout";
 import SEO from "../components/seo";
 import Post from "../components/post";
 import Nav from "../components/nav";
+import PostTitle from "../components/postTitle";
 import crownIcon from "../assets/svgs/crown.svg";
 import boardIcon from "../assets/svgs/board.svg";
-import PostTitle from "../components/postTitle";
 
 const Container = styled.div`
   margin-top: 0;
@@ -37,15 +38,26 @@ const IndexPage = ({ location }) => {
   //   () => dispatch(commonActions.getPath(location.pathname)),
   //   [dispatch]
   // );
+  const [cookies] = useCookies(["token"]);
+  const isLogin = useCallback(() => {
+    if (cookies["token"]) {
+      getBestPosts();
+      getAllPosts();
+    } else {
+      navigate(`/login`);
+    }
+  }, [cookies]);
 
-  const getBestPosts = () =>
-    get("/", () => {
-      console.log("getposts");
-    });
+  const getBestPosts = useCallback(() => {
+    console.log("베스트 게시글");
+  }, []);
+
+  const getAllPosts = useCallback(() => {
+    console.log("전체 게시글");
+  }, []);
 
   useEffect(() => {
-    // setCurPath(location.pathname);
-    getBestPosts();
+    isLogin();
   }, []);
 
   const [curType, setCurType] = useState("first");

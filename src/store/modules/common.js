@@ -19,21 +19,21 @@ const initialState = {
 
 export default handleActions(
   {
-    [SET_TOKEN]: (state, action) => ({
+    [SET_TOKEN]: (state, { payload }) => ({
       ...state,
-      token: action.payload
+      token: payload
     }),
-    [SET_REGION_NO]: (state, action) => ({
+    [SET_REGION_NO]: (state, { payload }) => ({
       ...state,
-      regionNo: action.payload
+      regionNo: payload
     }),
-    [SET_SECTOR_NO]: (state, action) => ({
+    [SET_SECTOR_NO]: (state, { payload }) => ({
       ...state,
-      sectorNo: action.payload
+      sectorNo: payload
     }),
-    [IS_LOADING]: (state, action) => ({
+    [IS_LOADING]: (state, { payload }) => ({
       ...state,
-      isLoading: action.payload
+      isLoading: payload
     })
   },
   initialState

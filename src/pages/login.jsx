@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { Link, navigate } from "gatsby";
-
+import { useCookies } from "react-cookie";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
@@ -54,6 +54,10 @@ const checkFillInput = form => {
 };
 
 const LoginPage = () => {
+  const [tokenCookie, setTokenCookie] = useCookies(["token"]);
+  const [sectorCookie, setSectorCookie] = useCookies(["sector"]);
+  const [regionCookie, setRegionCookie] = useCookies(["region"]);
+
   const dispatch = useDispatch();
   const setToken = useCallback(
     token => dispatch(commonActions.setToken(token)),
@@ -89,10 +93,18 @@ const LoginPage = () => {
       alert("모든 칸을 입력해주세요.");
     } else {
       login(`/login`, { ...form }, data => {
-        setToken(data.token);
-        setRegion(data.region_no);
-        setSector(data.sector_no);
-        navigate("/");
+        if (!data.message) {
+          const curToken = data.token;
+          const curSector = data.sector_no;
+          const curRegion = data.region_no;
+          setTokenCookie("token", curToken);
+          setSectorCookie("sector", curSector);
+          setRegionCookie("region", curRegion);
+          setToken(curToken);
+          setSector(curSector);
+          setRegion(curRegion);
+          navigate("/");
+        }
       });
     }
   }, [form]);

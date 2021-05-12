@@ -1,8 +1,10 @@
 import { combineReducers } from "redux";
 import common from "./common";
-import signup from "./signup";
+import user from "./user";
+import board from "./board";
 
 export default combineReducers({
   common,
-  signup
+  user,
+  board
 });

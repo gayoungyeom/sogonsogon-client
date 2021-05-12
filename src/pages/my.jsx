@@ -8,6 +8,168 @@ import SEO from "../components/seo";
 import Nav from "../components/nav";
 import Post from "../components/post";
 import Pagination from "../components/pagination";
+import { get, put } from "../utils/http";
+import { useDispatch, useSelector } from "react-redux";
+import * as userActions from "../store/modules/user";
+
+const MyPage = ({ location }) => {
+  const dispatch = useDispatch();
+  const input = useSelector(({ user }) => user.input).toJS();
+  const email = input.email || "";
+  const nickName = input.nickName || "";
+  const password = input.password || "";
+  const password2 = input.password2 || "";
+
+  const getInfo = useCallback(() => {
+    get(`/user`, data => {
+      dispatch(userActions.setInput({ key: "email", value: data.email }));
+      dispatch(userActions.setInput({ key: "nickName", value: data.nickname }));
+    });
+  }, [dispatch]);
+
+  useEffect(() => {
+    getInfo();
+  }, [getInfo]);
+
+  const onChangeInput = useCallback(e => {
+    dispatch(
+      userActions.setInput({ key: e.target.name, value: e.target.value })
+    );
+  }, []);
+
+  const editNickName = useCallback(() => {
+    put(`/user/editnickname`, { nickname: nickName }, data => {
+      alert(`${data.message}`);
+    });
+  }, [nickName]);
+
+  const [isChangePw, setIsChangePw] = useState(false);
+  const editPassword = useCallback(() => {
+    if (!isChangePw) {
+      setIsChangePw(true);
+    } else {
+      if (password === "" || password2 === "") {
+        alert(`변경할 비밀번호를 모두 입력해 주세요.`);
+      } else if (password !== password2) {
+        alert(`비밀번호가 일치하지 않습니다.`);
+      } else {
+        put(`/user/editpassword`, { password }, data => {
+          alert(`${data.message}`);
+        });
+      }
+    }
+  }, [password, password2]);
+
+  //nav control
+  const [curType, setCurType] = useState("first");
+  const editClickHandler = () => {
+    setCurType("first");
+  };
+  const listClickHandler = () => {
+    setCurType("second");
+  };
+
+  //pagination
+  const PER_PAGE = 10;
+  const [curPage, setCurPage] = useState(1);
+  const paginationHandler = current => {
+    setCurPage(current);
+  };
+
+  return (
+    <Layout isBack={true}>
+      <SEO title="MY" />
+      <Container>
+        <Nav
+          firstSubCategory="내 정보 수정"
+          secondSubCategory="내 활동 내역"
+          firstHandler={editClickHandler}
+          secondHandler={listClickHandler}
+          curType={curType}
+        />
+        {curType === "first" ? (
+          <InfoContainer>
+            <User>{nickName} 님</User>
+            <EmailContainer>
+              <EmailCaption>이메일</EmailCaption>
+              <Email>{email}</Email>
+            </EmailContainer>
+            <InputContainer>
+              <OneInput>
+                <InputCaption>닉네임</InputCaption>
+                <InputNick
+                  name="nickName"
+                  value={nickName}
+                  onChange={onChangeInput}
+                />
+                <EditBtnNick onClick={editNickName}>변경</EditBtnNick>
+              </OneInput>
+
+              {isChangePw && (
+                <>
+                  <OneInput>
+                    <InputCaption>비밀번호</InputCaption>
+                    <Input
+                      placeholder="변경하실 비밀번호를 입력해주세요"
+                      type="password"
+                      name="password"
+                      onChange={onChangeInput}
+                    />
+                  </OneInput>
+                  <OneInput>
+                    <InputCaption>비밀번호 확인</InputCaption>
+                    <Input
+                      placeholder="비밀번호를 한번 더 입력해주세요"
+                      type="password"
+                      name="password2"
+                      onChange={onChangeInput}
+                    />
+                  </OneInput>
+                </>
+              )}
+              <EditBtnPw onClick={editPassword}>비밀번호 변경하기</EditBtnPw>
+            </InputContainer>
+          </InfoContainer>
+        ) : (
+          <>
+            <SubTitle>내가 쓴 게시글</SubTitle>
+            <Post
+              title={`물어볼 때마다...`}
+              author={`익명의 사나이`}
+              createDate={`03.14`}
+              like={1442}
+              comment={70}
+            />
+            <Post
+              title={`진상 손님...`}
+              author={`익명의 사나이`}
+              createDate={`03.14`}
+              like={1442}
+              comment={70}
+            />
+            <Post
+              title={`옆에 싱싱마트...`}
+              author={`익명의 사나이`}
+              createDate={`03.14`}
+              like={1442}
+              comment={70}
+            />
+            <PaginationWrap>
+              <Pagination
+                current={curPage}
+                total={50}
+                pageSize={PER_PAGE}
+                onChange={paginationHandler}
+              />
+            </PaginationWrap>
+          </>
+        )}
+      </Container>
+    </Layout>
+  );
+};
+
+export default MyPage;
 
 const Container = styled.div`
   /* background: #f8f9fa; */
@@ -119,114 +281,3 @@ const PaginationWrap = styled.div`
   padding: 10px 0;
   padding: 0.625rem 0;
 `;
-
-const MyPage = ({ location }) => {
-  const [curType, setCurType] = useState("first");
-  const editClickHandler = () => {
-    console.log("edit my info");
-    setCurType("first");
-  };
-  const listClickHandler = () => {
-    console.log("my post list");
-    setCurType("second");
-  };
-
-  //비밀번호 변경
-  const [isChangePw, setIsChangePw] = useState(false);
-  const changePassword = () => {
-    setIsChangePw(true);
-  };
-
-  //pagination
-  const PER_PAGE = 10;
-  const [curPage, setCurPage] = useState(1);
-  const paginationHandler = current => {
-    setCurPage(current);
-  };
-
-  return (
-    <Layout isBack={true}>
-      <SEO title="MY" />
-      <Container>
-        <Nav
-          firstSubCategory={`내 정보 수정`}
-          secondSubCategory={`내 활동 내역`}
-          firstHandler={editClickHandler}
-          secondHandler={listClickHandler}
-          curType={curType}
-        />
-        {curType === "first" ? (
-          <InfoContainer>
-            <User>몽뜨님</User>
-            <EmailContainer>
-              <EmailCaption>이메일</EmailCaption>
-              <Email>montent@email.com</Email>
-            </EmailContainer>
-            <InputContainer>
-              <OneInput>
-                <InputCaption>닉네임</InputCaption>
-                <InputNick value={`몽뜨`} />
-                <EditBtnNick>변경</EditBtnNick>
-              </OneInput>
-
-              {isChangePw && (
-                <>
-                  <OneInput>
-                    <InputCaption>비밀번호</InputCaption>
-                    <Input
-                      placeholder={`변경하실 비밀번호를 입력해주세요`}
-                      type={`password`}
-                    />
-                  </OneInput>
-                  <OneInput>
-                    <InputCaption>비밀번호 확인</InputCaption>
-                    <Input
-                      placeholder={`비밀번호를 한번 더 입력해주세요`}
-                      type={`password`}
-                    />
-                  </OneInput>
-                </>
-              )}
-              <EditBtnPw onClick={changePassword}>비밀번호 변경하기</EditBtnPw>
-            </InputContainer>
-          </InfoContainer>
-        ) : (
-          <>
-            <SubTitle>내가 쓴 게시글</SubTitle>
-            <Post
-              title={`물어볼 때마다...`}
-              author={`익명의 사나이`}
-              createDate={`03.14`}
-              like={1442}
-              comment={70}
-            />
-            <Post
-              title={`진상 손님...`}
-              author={`익명의 사나이`}
-              createDate={`03.14`}
-              like={1442}
-              comment={70}
-            />
-            <Post
-              title={`옆에 싱싱마트...`}
-              author={`익명의 사나이`}
-              createDate={`03.14`}
-              like={1442}
-              comment={70}
-            />
-            <PaginationWrap>
-              <Pagination
-                current={curPage}
-                total={50}
-                pageSize={PER_PAGE}
-                onChange={paginationHandler}
-              />
-            </PaginationWrap>
-          </>
-        )}
-      </Container>
-    </Layout>
-  );
-};
-
-export default MyPage;
