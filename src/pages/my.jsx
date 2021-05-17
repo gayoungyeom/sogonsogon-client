@@ -20,6 +20,8 @@ const MyPage = ({ location }) => {
   const password = input.password || "";
   const password2 = input.password2 || "";
 
+  const posts = useSelector(({ user }) => user.myPosts);
+
   const getInfo = useCallback(() => {
     get(`/user`, data => {
       dispatch(userActions.setInput({ key: "email", value: data.email }));
@@ -29,7 +31,8 @@ const MyPage = ({ location }) => {
 
   useEffect(() => {
     getInfo();
-  }, [getInfo]);
+    getMyPosts(0);
+  }, [getInfo, getMyPosts]);
 
   const onChangeInput = useCallback(e => {
     dispatch(
@@ -72,9 +75,22 @@ const MyPage = ({ location }) => {
   //pagination
   const PER_PAGE = 10;
   const [curPage, setCurPage] = useState(1);
+  const [totalCnt, setTotalCnt] = useState(0);
+
   const paginationHandler = current => {
     setCurPage(current);
+    getMyPosts(current - 1);
   };
+
+  const getMyPosts = useCallback(
+    page => {
+      get(`/board/list/mine?page=${page}&count=${PER_PAGE}`, data => {
+        dispatch(userActions.setMyPosts(data.results1));
+        setTotalCnt(data.total_count);
+      });
+    },
+    [curPage, PER_PAGE, dispatch]
+  );
 
   return (
     <Layout isBack={true}>
@@ -133,31 +149,23 @@ const MyPage = ({ location }) => {
         ) : (
           <>
             <SubTitle>내가 쓴 게시글</SubTitle>
-            <Post
-              title={`물어볼 때마다...`}
-              author={`익명의 사나이`}
-              createDate={`03.14`}
-              like={1442}
-              comment={70}
-            />
-            <Post
-              title={`진상 손님...`}
-              author={`익명의 사나이`}
-              createDate={`03.14`}
-              like={1442}
-              comment={70}
-            />
-            <Post
-              title={`옆에 싱싱마트...`}
-              author={`익명의 사나이`}
-              createDate={`03.14`}
-              like={1442}
-              comment={70}
-            />
+            {posts &&
+              posts.map(post => (
+                <Post
+                  key={post.board_no}
+                  no={post.board_no}
+                  title={post.board_title}
+                  author={`익명의 사나이`}
+                  createDate={post.create_datetime}
+                  like={post.likes}
+                  comment={post.comments}
+                />
+              ))}
+
             <PaginationWrap>
               <Pagination
                 current={curPage}
-                total={50}
+                total={totalCnt}
                 pageSize={PER_PAGE}
                 onChange={paginationHandler}
               />

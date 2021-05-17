@@ -11,124 +11,6 @@ import * as commonActions from "../store/modules/common";
 import { get, signup } from "../utils/http";
 import { useDispatch, useSelector } from "react-redux";
 
-const Container = styled.div`
-  width: cal(100% - 100px);
-  margin: 100px 40px;
-  text-align: center;
-`;
-
-const Title = styled.div`
-  font-size: 37px;
-  font-weight: bold;
-  padding: 10px;
-`;
-
-const SubTitle = styled.div`
-  font-size: 12px;
-  font-weight: bold;
-  padding: 10px;
-  line-height: 15px;
-`;
-
-const SubContent = styled.div`
-  font-size: 9px;
-  margin-bottom: 18px;
-  line-height: 12px;
-`;
-
-const InputContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const OneInput = styled.div`
-  margin-top: 15px;
-`;
-
-const Input = styled.input`
-  width: 290px;
-  height: 45px;
-  font-size: 13px;
-  padding: 0 14px;
-  border: 2px solid #dededf;
-  border-radius: 4px;
-`;
-
-const Select = styled.select`
-  width: 290px;
-  height: 45px;
-  font-size: 13px;
-  padding: 0 14px;
-  margin-bottom: 10px;
-  border: 2px solid #dededf;
-  border-radius: 4px;
-  /* color: #b5b5b5; */
-  /* -webkit-appearance: none; */
-  /* -moz-appearance: none; */
-  /* appearance: none; */
-  /* outline: none; */
-`;
-
-const RegionContainer = styled.div`
-  display: inline-block;
-`;
-
-const SelectRegion = styled.select`
-  width: 96px;
-  height: 45px;
-  font-size: 13px;
-  padding: 0 14px;
-  border: 2px solid #dededf;
-  border-radius: 4px;
-`;
-
-const Option = styled.option`
-  width: 290px;
-  height: 45px;
-`;
-
-const Inputcaption = styled.div`
-  font-size: 12px;
-  font-weight: bold;
-  text-align: left;
-  padding: 5px;
-`;
-
-const AddImg = styled(Link)`
-  width: 290px;
-  height: 45px;
-  padding: 10px 0;
-  margin-top: 24px;
-  font-size: 14px;
-  border: 2px solid #dededf;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const Object = styled.object`
-  width: 20px;
-  margin-right: 5px;
-`;
-
-const Button = styled.button`
-  display: block;
-  width: 290px;
-  height: 45px;
-  margin-top: 22px;
-  font-size: 14px;
-  color: #fff;
-  background: ${props => (props.name === "signup" ? "#5c3ec2" : "#000")};
-  border: ${props => (props.name === "signup" ? "#5c3ec2" : "#000")};
-  border-radius: 4px;
-  cursor: pointer;
-  &:hover {
-    font-size: 15px;
-  }
-`;
-
 const SignupFinPage = () => {
   const dispatch = useDispatch();
   const sector = useSelector(({ signup }) => signup.sector);
@@ -279,3 +161,121 @@ const SignupFinPage = () => {
 };
 
 export default SignupFinPage;
+
+const Container = styled.div`
+  width: cal(100% - 100px);
+  margin: 100px 40px;
+  text-align: center;
+`;
+
+const Title = styled.div`
+  font-size: 37px;
+  font-weight: bold;
+  padding: 10px;
+`;
+
+const SubTitle = styled.div`
+  font-size: 12px;
+  font-weight: bold;
+  padding: 10px;
+  line-height: 15px;
+`;
+
+const SubContent = styled.div`
+  font-size: 9px;
+  margin-bottom: 18px;
+  line-height: 12px;
+`;
+
+const InputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const OneInput = styled.div`
+  margin-top: 15px;
+`;
+
+const Input = styled.input`
+  width: 290px;
+  height: 45px;
+  font-size: 13px;
+  padding: 0 14px;
+  border: 2px solid #dededf;
+  border-radius: 4px;
+`;
+
+const Select = styled.select`
+  width: 290px;
+  height: 45px;
+  font-size: 13px;
+  padding: 0 14px;
+  margin-bottom: 10px;
+  border: 2px solid #dededf;
+  border-radius: 4px;
+  /* color: #b5b5b5; */
+  /* -webkit-appearance: none; */
+  /* -moz-appearance: none; */
+  /* appearance: none; */
+  /* outline: none; */
+`;
+
+const RegionContainer = styled.div`
+  display: inline-block;
+`;
+
+const SelectRegion = styled.select`
+  width: 96px;
+  height: 45px;
+  font-size: 13px;
+  padding: 0 14px;
+  border: 2px solid #dededf;
+  border-radius: 4px;
+`;
+
+const Option = styled.option`
+  width: 290px;
+  height: 45px;
+`;
+
+const Inputcaption = styled.div`
+  font-size: 12px;
+  font-weight: bold;
+  text-align: left;
+  padding: 5px;
+`;
+
+const AddImg = styled(Link)`
+  width: 290px;
+  height: 45px;
+  padding: 10px 0;
+  margin-top: 24px;
+  font-size: 14px;
+  border: 2px solid #dededf;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Object = styled.object`
+  width: 20px;
+  margin-right: 5px;
+`;
+
+const Button = styled.button`
+  display: block;
+  width: 290px;
+  height: 45px;
+  margin-top: 22px;
+  font-size: 14px;
+  color: #fff;
+  background: ${props => (props.name === "signup" ? "#5c3ec2" : "#000")};
+  border: ${props => (props.name === "signup" ? "#5c3ec2" : "#000")};
+  border-radius: 4px;
+  cursor: pointer;
+  &:hover {
+    font-size: 15px;
+  }
+`;

@@ -7,71 +7,6 @@ import * as userActions from "../store/modules/user";
 
 import { useDispatch, useSelector } from "react-redux";
 
-const Container = styled.div`
-  width: cal(100% - 100px);
-  margin: 100px 40px;
-  text-align: center;
-`;
-
-const Title = styled.div`
-  font-size: 37px;
-  font-weight: bold;
-  padding: 10px;
-`;
-
-const SubTitle = styled.div`
-  font-size: 12px;
-  font-weight: bold;
-  padding: 10px;
-`;
-
-const SubContent = styled.div`
-  font-size: 9px;
-  margin-bottom: 18px;
-`;
-
-const InputContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const OneInput = styled.div`
-  margin-top: 15px;
-`;
-
-const Input = styled.input`
-  width: 290px;
-  height: 45px;
-  font-size: 13px;
-  padding: 0 14px;
-  border: 2px solid #dededf;
-  border-radius: 4px;
-`;
-
-const InputCaption = styled.div`
-  font-size: 12px;
-  font-weight: bold;
-  text-align: left;
-  padding: 5px;
-`;
-
-const Button = styled.button`
-  display: block;
-  width: 290px;
-  height: 45px;
-  margin-top: 22px;
-  font-size: 14px;
-  color: #fff;
-  background: ${props => (props.name === "next" ? "#5c3ec2" : "#000")};
-  border: ${props => (props.name === "next" ? "#5c3ec2" : "#000")};
-  border-radius: 4px;
-  cursor: pointer;
-  &:hover {
-    font-size: 15px;
-  }
-`;
-
 const SignupPage = () => {
   const dispatch = useDispatch();
   const email = useSelector(({ signup }) => signup.email);
@@ -166,3 +101,68 @@ const SignupPage = () => {
 };
 
 export default SignupPage;
+
+const Container = styled.div`
+  width: cal(100% - 100px);
+  margin: 100px 40px;
+  text-align: center;
+`;
+
+const Title = styled.div`
+  font-size: 37px;
+  font-weight: bold;
+  padding: 10px;
+`;
+
+const SubTitle = styled.div`
+  font-size: 12px;
+  font-weight: bold;
+  padding: 10px;
+`;
+
+const SubContent = styled.div`
+  font-size: 9px;
+  margin-bottom: 18px;
+`;
+
+const InputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const OneInput = styled.div`
+  margin-top: 15px;
+`;
+
+const Input = styled.input`
+  width: 290px;
+  height: 45px;
+  font-size: 13px;
+  padding: 0 14px;
+  border: 2px solid #dededf;
+  border-radius: 4px;
+`;
+
+const InputCaption = styled.div`
+  font-size: 12px;
+  font-weight: bold;
+  text-align: left;
+  padding: 5px;
+`;
+
+const Button = styled.button`
+  display: block;
+  width: 290px;
+  height: 45px;
+  margin-top: 22px;
+  font-size: 14px;
+  color: #fff;
+  background: ${props => (props.name === "next" ? "#5c3ec2" : "#000")};
+  border: ${props => (props.name === "next" ? "#5c3ec2" : "#000")};
+  border-radius: 4px;
+  cursor: pointer;
+  &:hover {
+    font-size: 15px;
+  }
+`;

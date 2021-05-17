@@ -30,7 +30,7 @@ export const get = async (path, callback) => {
   }
 };
 
-export const post = async (path, data, callback) => {
+export const postData = async (path, data, callback) => {
   const headers = checkAuth();
   try {
     const res = await axios.post(`${url()}${path}`, data, {
@@ -47,6 +47,19 @@ export const put = async (path, data, callback) => {
   try {
     const res = await axios.put(`${url()}${path}`, data, {
       headers
+    });
+    callback(res.data);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const deleteData = async (path, data, callback) => {
+  const headers = checkAuth();
+  try {
+    const res = await axios.delete(`${url()}${path}`, {
+      headers,
+      data
     });
     callback(res.data);
   } catch (e) {

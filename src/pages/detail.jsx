@@ -1,10 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Link } from "gatsby";
+import { Link, navigate } from "gatsby";
 
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import * as commonActions from "../store/modules/common";
+import board, * as boardActions from "../store/modules/board";
+
 import Layout from "../components/layout";
 import SEO from "../components/seo";
 import Comment from "../components/comment";
@@ -13,6 +15,156 @@ import heartIcon from "../assets/svgs/heart.svg";
 import commentIcon from "../assets/svgs/comment.svg";
 import emptyHeartIcon from "../assets/svgs/emptyHeart.svg";
 import flyIcon from "../assets/svgs/fly.svg";
+import { deleteData, get, postData, put } from "../utils/http";
+
+const DetailPage = ({ location }) => {
+  const dispatch = useDispatch();
+  const postNo = location.state.no;
+  const post = useSelector(({ board }) => board.post);
+  const comment = useSelector(({ board }) => board.comment);
+  const comments = useSelector(({ board }) => board.comments);
+  const [isMine, setIsMine] = useState(false);
+
+  console.log(comments);
+
+  const PER_PAGE = 10;
+  const [curPage, setCurPage] = useState(0);
+  const paginationHandler = useCallback(() => {
+    setCurPage(curPage => curPage + 1);
+  }, [curPage]);
+
+  const getPost = useCallback(() => {
+    get(`/board?board_no=${postNo}`, data => {
+      dispatch(boardActions.setPost(data));
+      setIsMine(data.is_mine);
+    });
+  }, [postNo, isMine, dispatch]);
+
+  const getComments = useCallback(() => {
+    get(
+      `/comment/list/all?count=${PER_PAGE}&page=${curPage}&board_no=${postNo}`,
+      data => {
+        //더보기 마지막 페이지면 alert 띄우기
+        curPage === 0
+          ? dispatch(boardActions.setComments(data.comments))
+          : dispatch(boardActions.setNextComments(data.comments));
+      }
+    );
+  }, [PER_PAGE, curPage, postNo, dispatch]);
+
+  useEffect(() => {
+    getPost();
+    getComments();
+  }, [getPost, getComments]);
+
+  const onChangeInput = useCallback(e => {
+    dispatch(boardActions.setComment(e.target.value));
+  }, []);
+
+  const createComment = useCallback(() => {
+    postData(`/comment`, { board_no: postNo, text: comment }, data => {
+      alert(`${data.message}`);
+      dispatch(boardActions.setComment(""));
+    });
+  }, [postNo, comment]);
+
+  const [isLike, setIsLike] = useState(false);
+  const onClickLike = useCallback(() => {
+    put(`/board/like?board_no=${postNo}`, {}, data => {
+      setIsLike(true);
+    });
+  }, [postNo, isLike]);
+
+  const onClickDeletePost = useCallback(() => {
+    console.log(postNo);
+    if (window.confirm(`해당 게시글을 삭제하시겠습니까?`)) {
+      deleteData(`/board?board_no=${postNo}`, {}, data => {
+        alert(`${data.message}`);
+        navigate("/all");
+      });
+    }
+  }, [postNo]);
+
+  return (
+    <Layout isBack={true}>
+      <SEO title="PostDetail" />
+      <Container>
+        <Post>
+          <CurType>지역 | 서초구 방배동</CurType>
+          <PostTitle>{post.board_title}</PostTitle>
+          <ABDContainer>
+            <ABDWrap>
+              <Author>익명의 사나이</Author>
+              <Bar>|</Bar>
+              <Date>{post.create_datetime}</Date>
+            </ABDWrap>
+            {isMine || (
+              <EditDeleteWrap>
+                <Edit to="/edit" state={{ postNo }}>
+                  수정
+                </Edit>
+                <Delete onClick={onClickDeletePost}>삭제</Delete>
+              </EditDeleteWrap>
+            )}
+          </ABDContainer>
+          <Content>{post.board_content}</Content>
+          <CommuContainer>
+            <CommuRight>
+              <ViewImg>
+                <SVG>
+                  <object type="image/svg+xml" data={viewIcon} />
+                </SVG>
+                {post.views}
+              </ViewImg>
+              <LikeImg>
+                <SVG>
+                  <object type="image/svg+xml" data={heartIcon} />
+                </SVG>
+                {post.likes}
+              </LikeImg>
+              <CommentImg>
+                <SVG>
+                  <object type="image/svg+xml" data={commentIcon} />
+                </SVG>
+                {post.comments}
+              </CommentImg>
+            </CommuRight>
+            <LikeBtn isLike={isLike} onClick={onClickLike}>
+              ♡ 공감
+            </LikeBtn>
+          </CommuContainer>
+        </Post>
+        <CommentContainer>
+          <CommentCnt>댓글 70</CommentCnt>
+          {comments &&
+            comments.map(comment => (
+              <Comment
+                key={comment.no}
+                author={comment.nickname}
+                createDate={comment.create_datetime}
+                content={comment.text}
+              />
+            ))}
+        </CommentContainer>
+        <MoreWrap>
+          <More onClick={paginationHandler}>더보기</More>
+        </MoreWrap>
+      </Container>
+      <InputContainer>
+        <InputWrap>
+          <Input
+            placeholder={`댓글을 입력하세요.`}
+            value={comment}
+            onChange={onChangeInput}
+          />
+          <InputBtn onClick={createComment} />
+        </InputWrap>
+      </InputContainer>
+    </Layout>
+  );
+};
+
+export default DetailPage;
 
 const Container = styled.div`
   background: #f8f9fa;
@@ -36,7 +188,35 @@ const PostTitle = styled.div`
 `;
 
 const ABDContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
   padding-bottom: 10px;
+`;
+
+const ABDWrap = styled.div`
+  display: flex;
+`;
+
+const EditDeleteWrap = styled.div`
+  display: flex;
+  padding-right: 10px;
+`;
+
+const Edit = styled(Link)`
+  font-size: 11px;
+  font-weight: bold;
+  color: #5c3ec2;
+  padding-right: 10px;
+`;
+
+const Delete = styled.button`
+  font-size: 11px;
+  font-weight: bold;
+  color: #5c3ec2;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
 `;
 
 const Author = styled.span`
@@ -74,13 +254,13 @@ const CommuRight = styled.span`
   color: #5c3ec2;
 `;
 
-const Views = styled.span``;
+const ViewImg = styled.span``;
 
-const Likes = styled.span`
+const LikeImg = styled.span`
   padding: 0 10px;
 `;
 
-const Comments = styled.span``;
+const CommentImg = styled.span``;
 
 const LikeBtn = styled.button`
   display: flex;
@@ -88,9 +268,10 @@ const LikeBtn = styled.button`
   justify-content: center;
   width: 65px;
   height: 26px;
-  color: #5c3ec2;
-  font-weight: bold;
-  background: #fff;
+  color: ${props => (props.isLike ? "#fff" : "#5c3ec2")};
+  /* font-weight: bold; */
+  background: ${props => (props.isLike ? "#5c3ec2" : "#fff")};
+  /* background: url(${emptyHeartIcon}) left no-repeat; */
   border: 1px solid #5c3ec2;
   border-radius: 4px;
   outline: none;
@@ -162,94 +343,11 @@ const InputBtn = styled.button`
   border: none;
   cursor: pointer;
   outline: none;
-  background: #fff;
+  /* background: #fff; */
+  background: url(${flyIcon}) center no-repeat;
   font-weight: bold;
 `;
 
 const SVG = styled.span`
   padding: 3px;
 `;
-
-const Edit = styled(Link)`
-  color: #5c3ec2;
-`;
-
-const DetailPage = ({ location }) => {
-  const testArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  return (
-    <Layout isBack={true}>
-      <SEO title="PostDetail" />
-      <Container>
-        <Post>
-          <CurType>지역 | 서초구 방배동</CurType>
-          <PostTitle>
-            물어볼 때마다 말이 달라지는 직원 어떻게 대처하시나요?
-          </PostTitle>
-          <ABDContainer>
-            <Author>익명의 사나이</Author>
-            <Bar>|</Bar>
-            <Date>2021.03.14</Date>
-          </ABDContainer>
-          <Content>
-            예전에 이렇게하라고 시켰는데 갑자기 그게 아니라고 다른 방식으로
-            한다던지, 본인이 말했던 걸 기억 못하고 계속해서 다른 변명만 내뱉는
-            직원분들이 많이 있으신가요? 본인이 잘못 해놓고 제가 그렇게 말한적
-            없는 것처럼 말하는데 답답하기 그지없네요
-          </Content>
-          <CommuContainer>
-            <CommuRight>
-              <Views>
-                <SVG>
-                  <object type="image/svg+xml" data={viewIcon} />
-                </SVG>
-                2843
-              </Views>
-              <Likes>
-                <SVG>
-                  <object type="image/svg+xml" data={heartIcon} />
-                </SVG>
-                1442
-              </Likes>
-              <Comments>
-                <SVG>
-                  <object type="image/svg+xml" data={commentIcon} />
-                </SVG>
-                70
-              </Comments>
-            </CommuRight>
-            <LikeBtn>
-              <SVG>
-                <object type="image/svg+xml" data={emptyHeartIcon} />
-              </SVG>
-              공감
-            </LikeBtn>
-          </CommuContainer>
-        </Post>
-        <CommentContainer>
-          <CommentCnt>댓글 70</CommentCnt>
-          {testArr.map(val => (
-            <Comment
-              key={val}
-              author={`조나단`}
-              createDate={`3일전`}
-              content={`말로 하시지 마시고 종이에 해야할 사항 적어서 전달하세요.`}
-            />
-          ))}
-        </CommentContainer>
-        <MoreWrap>
-          <More>더보기</More>
-        </MoreWrap>
-      </Container>
-      <InputContainer>
-        <InputWrap>
-          <Input placeholder={`댓글을 입력하세요.`} />
-          <InputBtn>
-            <object type="image/svg+xml" data={flyIcon} />
-          </InputBtn>
-        </InputWrap>
-      </InputContainer>
-    </Layout>
-  );
-};
-
-export default DetailPage;

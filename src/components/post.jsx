@@ -6,53 +6,10 @@ import styled from "styled-components";
 import heartIcon from "../assets/svgs/heart.svg";
 import commentIcon from "../assets/svgs/comment.svg";
 
-const Container = styled.div`
-  height: 80px;
-  padding: 15px;
-  background: #f8f9fa;
-  border: 2px solid #fff;
-`;
-
-const Title = styled.div`
-  font-size: 14px;
-`;
-
-const Rank = styled.span`
-  font-size: 16px;
-  color: #5c3ec2;
-  padding-right: 5px;
-`;
-
-const PostSub = styled.div`
-  display: flex;
-  justify-content: space-between;
-  font-size: 11px;
-  padding-top: 20px;
-`;
-
-const Left = styled.span``;
-
-const Author = styled.span``;
-
-const Bar = styled.span`
-  padding: 0 5px;
-`;
-
-const CreateDate = styled.span``;
-
-const Right = styled.span``;
-
-const Span = styled.span``;
-
-const Emo = styled.span`
-  padding: 0 6px;
-  /* color: #5c3ec2; */
-`;
-
 //Link로 넘길 때 post_id 넣어줘야 하니까 props로 postId 넣어주기
-const Post = ({ title, author, createDate, like, comment, rank }) => {
+const Post = ({ no, title, author, createDate, like, comment, rank }) => {
   return (
-    <Link to="/detail">
+    <Link to="/detail" state={{ no }}>
       <Container>
         <Title>
           {rank ? <Rank>{rank}</Rank> : null}
@@ -101,3 +58,46 @@ Post.defaultProps = {
 };
 
 export default Post;
+
+const Container = styled.div`
+  height: 80px;
+  padding: 15px;
+  background: #f8f9fa;
+  border: 2px solid #fff;
+`;
+
+const Title = styled.div`
+  font-size: 14px;
+`;
+
+const Rank = styled.span`
+  font-size: 16px;
+  color: #5c3ec2;
+  padding-right: 5px;
+`;
+
+const PostSub = styled.div`
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  padding-top: 20px;
+`;
+
+const Left = styled.span``;
+
+const Author = styled.span``;
+
+const Bar = styled.span`
+  padding: 0 5px;
+`;
+
+const CreateDate = styled.span``;
+
+const Right = styled.span``;
+
+const Span = styled.span``;
+
+const Emo = styled.span`
+  padding: 0 6px;
+  /* color: #5c3ec2; */
+`;

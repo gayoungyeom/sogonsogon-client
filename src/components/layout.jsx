@@ -30,15 +30,27 @@ const Layout = ({ children, isShow, isBack }) => {
   const dispatch = useDispatch();
 
   const [cookies] = useCookies();
+
   const tokenValidation = useCallback(() => {
-    //쿠키에 토큰이 있으면 리덕스에 저장
     const token = cookies["token"];
     dispatch(commonActions.setToken(token));
   }, [cookies, dispatch]);
 
+  const regionValidation = useCallback(() => {
+    const region = cookies["region"];
+    dispatch(commonActions.setRegionBcode(region));
+  }, [cookies, dispatch]);
+
+  const sectorValidation = useCallback(() => {
+    const sector = cookies["sector"];
+    dispatch(commonActions.setSectorNo(sector));
+  }, [cookies, dispatch]);
+
   useEffect(() => {
     tokenValidation();
-  }, [tokenValidation]);
+    regionValidation();
+    sectorValidation();
+  }, [tokenValidation, regionValidation, sectorValidation]);
 
   return (
     <>

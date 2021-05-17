@@ -1,11 +1,130 @@
-import React, { useState } from "react";
-import { Link } from "gatsby";
+import React, { useCallback, useEffect, useState } from "react";
+import { Link, navigate } from "gatsby";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
+
+import * as commonActions from "../store/modules/common";
+import * as userActions from "../store/modules/user";
+import * as boardActions from "../store/modules/board";
+
+import { get, put } from "../utils/http";
 
 import Layout from "../components/layout";
 import SEO from "../components/seo";
 import Nav from "../components/nav";
 
 import styled from "styled-components";
+
+const EditPage = ({ location }) => {
+  const dispatch = useDispatch();
+  const postNo = location.state.postNo;
+  // const post = useSelector(({ board }) => board.post);
+  const data = useSelector(({ board }) => board.input).toJS();
+  console.log(data);
+
+  const regionBecode = useSelector(({ common }) => common.regionBcode);
+  const sectorNo = useSelector(({ common }) => common.sectorNo);
+
+  const navNames = useSelector(({ user }) => user.navNames);
+  const getNavNames = useCallback(() => {
+    get(
+      `/user/getName?region_bcode=${regionBecode}&sector_no=${sectorNo}`,
+      data => {
+        dispatch(userActions.setNavName(data));
+      }
+    );
+  }, [regionBecode, sectorNo, dispatch]);
+
+  const getPost = useCallback(() => {
+    get(`/board?board_no=${postNo}`, data => {
+      dispatch(
+        boardActions.setInput({ key: "title", value: data.board_title })
+      );
+      dispatch(
+        boardActions.setInput({ key: "content", value: data.board_content })
+      );
+
+      data.region_bcode ? regionClickHandler() : sectorClickHandler();
+    });
+  }, [postNo, dispatch]);
+
+  useEffect(() => {
+    getNavNames();
+    getPost();
+  }, [getNavNames, getPost]);
+
+  const onChangeInput = useCallback(e => {
+    dispatch(
+      boardActions.setInput({ key: e.target.name, value: e.target.value })
+    );
+  }, []);
+
+  const onClickRegister = useCallback(() => {
+    put(
+      `/board`,
+      {
+        board_no: postNo,
+        title: data.title,
+        content: data.content,
+        category: data.category,
+        category_no: data.category_no
+      },
+      data => {
+        alert(data.message);
+        navigate(`/detail`, { state: { no: postNo } });
+      }
+    );
+  }, [data]);
+
+  const [curType, setCurType] = useState("first");
+
+  const regionClickHandler = () => {
+    setCurType("first");
+    dispatch(boardActions.setInput({ key: "category", value: "region" }));
+    dispatch(
+      boardActions.setInput({ key: "category_no", value: regionBecode })
+    );
+  };
+
+  const sectorClickHandler = () => {
+    setCurType("second");
+    dispatch(boardActions.setInput({ key: "category", value: "sector" }));
+    dispatch(boardActions.setInput({ key: "category_no", value: sectorNo }));
+  };
+
+  return (
+    <Layout>
+      <SEO title="Edit" />
+      <Container>
+        <Nav
+          firstCategory="내 지역"
+          firstSubCategory={`${navNames.r2_bname} ${navNames.r3_bname}`}
+          secondCategory="내 업종"
+          secondSubCategory={navNames.sector_name}
+          firstHandler={regionClickHandler}
+          secondHandler={sectorClickHandler}
+          curType={curType}
+        />
+        <Title
+          placeholder={`제목을 입력해주세요`}
+          name="title"
+          value={data.title}
+          onChange={onChangeInput}
+        />
+        <Content
+          placeholder={`내용을 입력해주세요`}
+          name="content"
+          value={data.content}
+          onChange={onChangeInput}
+        />
+        <BtnWrap>
+          <SaveBtn onClick={onClickRegister}>저장</SaveBtn>
+        </BtnWrap>
+      </Container>
+    </Layout>
+  );
+};
+
+export default EditPage;
 
 const Container = styled.div`
   margin-top: 0;
@@ -56,49 +175,3 @@ const SaveBtn = styled.button`
   outline: none;
   cursor: pointer;
 `;
-
-const EditPage = ({ location }) => {
-  const [curType, setCurType] = useState("first");
-
-  const regionClickHandler = () => {
-    console.log("region");
-    setCurType("first");
-  };
-
-  const businessClickHandler = () => {
-    console.log("business");
-    setCurType("second");
-  };
-
-  return (
-    <Layout>
-      <SEO title="Edit" />
-      <Container>
-        <Nav
-          firstCategory={`내 지역`}
-          firstSubCategory={`서초구 방배동`}
-          secondCategory={`내 업종`}
-          secondSubCategory={`외식업`}
-          firstHandler={regionClickHandler}
-          secondHandler={businessClickHandler}
-          curType={curType}
-        />
-        <Title
-          placeholder={`제목을 입력해주세요`}
-          value={`물어볼 때마다 말이 달라지는 직원 어떻게 대처하시나요?`}
-        />
-        <Content
-          placeholder={`내용을 입력해주세요`}
-          value={`예전에 이렇게하라고 시켰는데 갑자기 그게 아니라고 다른 방식으로 한다던지, 본인이 말했던 걸 기억 못하고 계속해서 다른 변명만 내뱉는 직원분들이 많이 있으신가요?
-본인이 잘못 해놓고 제가 그렇게 말한적 없는 것처럼 말하는데 답답하기 그지없네요
-`}
-        />
-        <BtnWrap>
-          <SaveBtn>저장</SaveBtn>
-        </BtnWrap>
-      </Container>
-    </Layout>
-  );
-};
-
-export default EditPage;

@@ -3,16 +3,30 @@ import { Link, navigate } from "gatsby";
 
 import styled from "styled-components";
 import * as boardActions from "../store/modules/board";
+import * as userActions from "../store/modules/user";
 
 import Layout from "../components/layout";
 import SEO from "../components/seo";
 import Nav from "../components/nav";
-import { post } from "../utils/http";
+import { get, postData } from "../utils/http";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 
 const CreatePage = ({ location }) => {
   const dispatch = useDispatch();
   const data = useSelector(({ board }) => board.input).toJS();
+  console.log(data);
+  const regionBcode = useSelector(({ common }) => common.regionBcode);
+  const sectorNo = useSelector(({ common }) => common.sectorNo);
+
+  const navNames = useSelector(({ user }) => user.navNames);
+  const getNavNames = useCallback(() => {
+    get(
+      `/user/getName?region_bcode=${regionBcode}&sector_no=${sectorNo}`,
+      data => {
+        dispatch(userActions.setNavName(data));
+      }
+    );
+  }, [regionBcode, sectorNo, dispatch]);
 
   const onChangeInput = useCallback(e => {
     dispatch(
@@ -25,34 +39,40 @@ const CreatePage = ({ location }) => {
   const regionClickHandler = () => {
     setCurType("first");
     dispatch(boardActions.setInput({ key: "category", value: "region" }));
+    dispatch(boardActions.setInput({ key: "category_no", value: regionBcode }));
   };
 
   const sectorClickHandler = () => {
     setCurType("second");
     dispatch(boardActions.setInput({ key: "category", value: "sector" }));
+    dispatch(boardActions.setInput({ key: "category_no", value: sectorNo }));
   };
 
   const onClickRegister = useCallback(() => {
     if (data.title === "" || data.content === "") {
       alert("제목과 내용을 모두 입력해주세요.");
     } else {
-      post(`/board`, { ...data }, data => {
-        //글쓴 후 그냥 게시판으로 넘어가도 될거 같음
-        alert(`${data.success}`);
-        navigate("/all"); //본인 게시글로 이동 or 전체 게시글로 이동?
+      postData(`/board`, { ...data }, data => {
+        alert(`${data.message}`);
+        navigate("/all"); //해당 게시글로 이동 or 전체 게시글로 이동?
       });
     }
   }, [data]);
+
+  useEffect(() => {
+    getNavNames();
+    // dispatch(boardActions.setInput({ key: "category_no", value: sectorNo }));
+  }, [getNavNames]);
 
   return (
     <Layout isBack={true}>
       <SEO title="Create" />
       <Container>
         <Nav
-          firstCategory={`내 지역`}
-          firstSubCategory={`서초구 방배동`}
-          secondCategory={`내 업종`}
-          secondSubCategory={`외식업`}
+          firstCategory="내 지역"
+          firstSubCategory={`${navNames.r2_bname} ${navNames.r3_bname}`}
+          secondCategory="내 업종"
+          secondSubCategory={navNames.sector_name}
           firstHandler={regionClickHandler}
           secondHandler={sectorClickHandler}
           curType={curType}

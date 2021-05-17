@@ -8,46 +8,6 @@ import GlobalStyles from "../components/globalstyles";
 import * as commonActions from "../store/modules/common";
 import { login } from "../utils/http";
 
-const Container = styled.div`
-  width: cal(100% - 100px);
-  margin: 100px 40px;
-`;
-
-const Title = styled.div`
-  font-size: 37px;
-  font-weight: bold;
-  text-align: center;
-  padding: 10px;
-  margin-bottom: 28px;
-`;
-
-const Input = styled.input`
-  display: block;
-  width: 290px;
-  height: 45px;
-  margin: 22px auto;
-  font-size: 13px;
-  padding: 0 14px;
-  border: 2px solid #dededf;
-  border-radius: 4px;
-`;
-
-const Button = styled.button`
-  display: block;
-  width: 290px;
-  height: 45px;
-  margin: 22px auto;
-  font-size: 14px;
-  color: #fff;
-  background: ${props => (props.name === "login" ? "#5c3ec2" : "#000")};
-  border: ${props => (props.name === "login" ? "#5c3ec2" : "#000")};
-  border-radius: 4px;
-  cursor: pointer;
-  &:hover {
-    font-size: 15px;
-  }
-`;
-
 const checkFillInput = form => {
   if (form.email === "" || form.password === "") return false;
   else return true;
@@ -64,7 +24,7 @@ const LoginPage = () => {
     [dispatch]
   );
   const setRegion = useCallback(
-    regionNo => dispatch(commonActions.setRegionNo(regionNo)),
+    regionBcode => dispatch(commonActions.setRegionBcode(regionBcode)),
     [dispatch]
   );
   const setSector = useCallback(
@@ -93,10 +53,11 @@ const LoginPage = () => {
       alert("모든 칸을 입력해주세요.");
     } else {
       login(`/login`, { ...form }, data => {
+        console.log(data);
         if (!data.message) {
           const curToken = data.token;
           const curSector = data.sector_no;
-          const curRegion = data.region_no;
+          const curRegion = data.region_bcode;
           setTokenCookie("token", curToken);
           setSectorCookie("sector", curSector);
           setRegionCookie("region", curRegion);
@@ -137,3 +98,43 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
+
+const Container = styled.div`
+  width: cal(100% - 100px);
+  margin: 100px 40px;
+`;
+
+const Title = styled.div`
+  font-size: 37px;
+  font-weight: bold;
+  text-align: center;
+  padding: 10px;
+  margin-bottom: 28px;
+`;
+
+const Input = styled.input`
+  display: block;
+  width: 290px;
+  height: 45px;
+  margin: 22px auto;
+  font-size: 13px;
+  padding: 0 14px;
+  border: 2px solid #dededf;
+  border-radius: 4px;
+`;
+
+const Button = styled.button`
+  display: block;
+  width: 290px;
+  height: 45px;
+  margin: 22px auto;
+  font-size: 14px;
+  color: #fff;
+  background: ${props => (props.name === "login" ? "#5c3ec2" : "#000")};
+  border: ${props => (props.name === "login" ? "#5c3ec2" : "#000")};
+  border-radius: 4px;
+  cursor: pointer;
+  &:hover {
+    font-size: 15px;
+  }
+`;
