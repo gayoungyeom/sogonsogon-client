@@ -1,31 +1,23 @@
 import React, { useEffect, useCallback, useState } from "react";
-import { Link } from "gatsby";
+import { navigate } from "gatsby";
 
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
+import { get, signup } from "../utils/http";
+import * as userActions from "../store/modules/user";
 import GlobalStyles from "../components/globalstyles";
 import MyDropzone from "../components/dropzone";
 import cameraIcon from "../assets/svgs/camera.svg";
-import * as userActions from "../store/modules/user";
-import * as commonActions from "../store/modules/common";
-
-import { get, signupAxios } from "../utils/http";
 
 const SignupFinPage = () => {
   const dispatch = useDispatch();
   const input = useSelector(({ user }) => user.input).toJS();
-  const sector = input.sector_no;
-  const region = input.region_bcode;
-  const image = input.img;
-  console.log(input);
 
   const [sectorList, setSectorList] = useState([]);
   const [regionList1, setRegionList1] = useState([]);
   const [regionList2, setRegionList2] = useState([]);
   const [regionList3, setRegionList3] = useState([]);
-
-  // const [region1, setRegion1] = useState(0);
 
   const [isFirstSelected, setIsFirstSelected] = useState(false);
   const [isSecondSelected, setIsSecondSelected] = useState(false);
@@ -44,47 +36,53 @@ const SignupFinPage = () => {
 
   useEffect(() => {
     if (input.email === "") {
-      console.log("네비게이트");
+      navigate("/signup");
+    } else {
+      getSectorList();
+      getRegionList1();
     }
-    getSectorList();
-    getRegionList1();
-  }, [getSectorList, getRegionList1]);
+  }, [input.email, getSectorList, getRegionList1]);
 
-  const onChangeInput = useCallback(e => {
-    console.log(e.target.value);
-    dispatch(
-      userActions.setInput({ key: e.target.name, value: e.target.value })
-    );
+  const onChangeInput = useCallback(
+    e => {
+      dispatch(
+        userActions.setInput({ key: e.target.name, value: e.target.value })
+      );
+    },
+    [dispatch]
+  );
+
+  const onSelectFirstRegion = useCallback(e => {
+    const region1No = e.target.value;
+    get(`/user/selectregion2?region_1_no=${region1No}`, data => {
+      setRegionList2(data.results);
+      setIsFirstSelected(true);
+    });
   }, []);
 
-  const onSelectFirstRegion = useCallback(
-    e => {
-      const region1No = e.target.value; //임시 변수
-      get(`/user/selectregion2?region_1_no=${region1No}`, data => {
-        setRegionList2(data.results);
-        setIsFirstSelected(true);
-      });
-    },
-    [regionList1]
-  );
-
-  const onSelectSecondRegion = useCallback(
-    e => {
-      const region2No = e.target.value; //임시 변수
-      get(`/user/selectregion3?region_2_no=${region2No}`, data => {
-        setRegionList3(data.results);
-        setIsSecondSelected(true);
-      });
-    },
-    [regionList2]
-  );
+  const onSelectSecondRegion = useCallback(e => {
+    const region2No = e.target.value;
+    get(`/user/selectregion3?region_2_no=${region2No}`, data => {
+      setRegionList3(data.results);
+      setIsSecondSelected(true);
+    });
+  }, []);
 
   const onClickSignup = useCallback(() => {
-    console.log("회원가입");
-    signupAxios(`/user`, { ...input }, res => {
-      console.log(res);
+    const fd = new FormData();
+    fd.append("img", input.img, input.img.name);
+    fd.append("email", input.email);
+    fd.append("password", input.password);
+    fd.append("nickname", input.nickname);
+    fd.append("region_bcode", input.region_bcode);
+    fd.append("sector_no", input.sector_no);
+
+    signup(`/user`, fd, data => {
+      alert(`${data.message}`);
+      dispatch(userActions.resetInput());
+      navigate("/login");
     });
-  }, [input]);
+  }, [input, dispatch]);
 
   return (
     <Container>
@@ -209,15 +207,6 @@ const InputContainer = styled.div`
 
 const OneInput = styled.div`
   margin-top: 15px;
-`;
-
-const Input = styled.input`
-  width: 290px;
-  height: 45px;
-  font-size: 13px;
-  padding: 0 14px;
-  border: 2px solid #dededf;
-  border-radius: 4px;
 `;
 
 const Select = styled.select`

@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Link } from "gatsby";
 
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
@@ -41,7 +40,7 @@ const MyPage = ({ location }) => {
         setTotalCnt(data.total_count);
       });
     },
-    [curPage, PER_PAGE, dispatch]
+    [PER_PAGE, dispatch]
   );
 
   useEffect(() => {
@@ -49,11 +48,14 @@ const MyPage = ({ location }) => {
     getMyPosts(0);
   }, [getInfo, getMyPosts]);
 
-  const onChangeInput = useCallback(e => {
-    dispatch(
-      userActions.setInput({ key: e.target.name, value: e.target.value })
-    );
-  }, []);
+  const onChangeInput = useCallback(
+    e => {
+      dispatch(
+        userActions.setInput({ key: e.target.name, value: e.target.value })
+      );
+    },
+    [dispatch]
+  );
 
   const editNickName = useCallback(() => {
     put(`/user/editnickname`, { nickname: nickName }, data => {
@@ -75,7 +77,7 @@ const MyPage = ({ location }) => {
         });
       }
     }
-  }, [password, password2]);
+  }, [password, password2, isChangePw]);
 
   const editClickHandler = () => {
     setCurType("first");

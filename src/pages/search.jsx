@@ -23,12 +23,9 @@ const SearchPage = ({ location }) => {
   const [input, setInput] = useState("");
   const [isSearched, setIsSearched] = useState(false);
 
-  const onChangeInput = useCallback(
-    e => {
-      setInput(e.target.value);
-    },
-    [input]
-  );
+  const onChangeInput = useCallback(e => {
+    setInput(e.target.value);
+  }, []);
 
   const getResults = useCallback(
     page => {
@@ -41,12 +38,12 @@ const SearchPage = ({ location }) => {
         }
       );
     },
-    [input, PER_PAGE, totalCnt]
+    [input, PER_PAGE, dispatch]
   );
 
   const onClickSearch = useCallback(() => {
     getResults(0);
-  }, [input]);
+  }, [getResults]);
 
   const onKeyPress = e => {
     e.key === "Enter" && onClickSearch();

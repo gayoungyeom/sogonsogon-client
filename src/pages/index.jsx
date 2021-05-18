@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Link, navigate } from "gatsby";
+import { navigate } from "gatsby";
 
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { useCookies } from "react-cookie";
 
-import { get, post } from "../utils/http";
+import { get } from "../utils/http";
 import * as boardActions from "../store/modules/board";
 import * as userActions from "../store/modules/user";
 import Layout from "../components/layout";
@@ -39,12 +39,12 @@ const IndexPage = ({ location }) => {
     } else {
       navigate(`/login`);
     }
-  }, [cookies, regionBecode, sectorNo, navNames, dispatch]);
+  }, [cookies, regionBecode, sectorNo, dispatch, regionClickHandler]);
 
   useEffect(() => {
     isLogin();
     //deps에 왜 이게 들어가는지 이해가 안되네..navNames넣으면 무한루프에 빠지고..
-  }, [regionBecode, sectorNo]);
+  }, [regionBecode, sectorNo, isLogin]);
 
   const regionClickHandler = useCallback(() => {
     setCurType("first");
@@ -60,7 +60,7 @@ const IndexPage = ({ location }) => {
         dispatch(boardActions.setAllPosts(data.results));
       }
     );
-  }, [curType, regionBecode, dispatch]);
+  }, [regionBecode, dispatch]);
 
   const sectorClickHandler = useCallback(() => {
     setCurType("second");
@@ -73,7 +73,7 @@ const IndexPage = ({ location }) => {
         dispatch(boardActions.setAllPosts(data.results));
       }
     );
-  }, [curType, sectorNo, dispatch]);
+  }, [sectorNo, dispatch]);
 
   return (
     <Layout>

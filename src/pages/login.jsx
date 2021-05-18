@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { Link, navigate } from "gatsby";
+import { navigate } from "gatsby";
 
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
@@ -45,13 +45,13 @@ const LoginPage = () => {
   );
 
   const onKeyPress = e => {
-    e.key === "Enter" && onClickLogin();
+    if (e.key === "Enter") onClickLogin();
   };
 
-  const checkFillInput = () => {
+  const checkFillInput = useCallback(() => {
     if (form.email === "" || form.password === "") return false;
     else return true;
-  };
+  }, [form]);
 
   const onClickLogin = useCallback(() => {
     if (!checkFillInput()) {
@@ -72,7 +72,16 @@ const LoginPage = () => {
         }
       });
     }
-  }, [form]);
+  }, [
+    form,
+    checkFillInput,
+    setTokenCookie,
+    setSectorCookie,
+    setRegionCookie,
+    setToken,
+    setSector,
+    setRegion
+  ]);
 
   return (
     <Container>

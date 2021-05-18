@@ -82,7 +82,7 @@ const DetailPage = ({ location }) => {
     dispatch(boardActions.setComment(e.target.value));
   }, []);
 
-  const onClickcreateComment = useCallback(() => {
+  const createComment = useCallback(() => {
     postData(`/comment`, { board_no: postNo, text: comment }, data => {
       alert(`${data.message}`);
       dispatch(boardActions.setComment(""));
@@ -90,7 +90,11 @@ const DetailPage = ({ location }) => {
     });
   }, [postNo, comment]);
 
-  const onClickDeletePost = useCallback(() => {
+  const onKeyPress = e => {
+    if (e.key === "Enter") createComment();
+  };
+
+  const deletePost = useCallback(() => {
     if (window.confirm(`해당 게시글을 삭제하시겠습니까?`)) {
       deleteData(`/board?board_no=${postNo}`, {}, data => {
         alert(`${data.message}`);
@@ -99,7 +103,7 @@ const DetailPage = ({ location }) => {
     }
   }, [postNo]);
 
-  const onClickDeleteComment = useCallback(
+  const deleteComment = useCallback(
     idx => {
       if (window.confirm(`해당 댓글을 삭제하시겠습니까?`)) {
         const deletedNo = comments[idx].no;
@@ -129,7 +133,7 @@ const DetailPage = ({ location }) => {
                 <Edit to="/edit" state={{ postNo }}>
                   수정
                 </Edit>
-                <Delete onClick={onClickDeletePost}>삭제</Delete>
+                <Delete onClick={deletePost}>삭제</Delete>
               </EditDeleteWrap>
             )}
           </ABDContainer>
@@ -171,7 +175,7 @@ const DetailPage = ({ location }) => {
                 createDate={comment.create_datetime}
                 content={comment.text}
                 isMine={comment.is_mine}
-                onClickDelete={() => onClickDeleteComment(idx)}
+                onClickDelete={() => deleteComment(idx)}
               />
             ))}
         </CommentContainer>
@@ -187,8 +191,9 @@ const DetailPage = ({ location }) => {
             placeholder={`댓글을 입력하세요.`}
             value={comment}
             onChange={onChangeInput}
+            onKeyPress={onKeyPress}
           />
-          <InputBtn onClick={onClickcreateComment} />
+          <InputBtn onClick={createComment} />
         </InputWrap>
       </InputContainer>
     </Layout>

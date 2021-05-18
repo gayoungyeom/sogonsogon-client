@@ -1,5 +1,5 @@
-import React, { useCallback, useState } from "react";
-import { Link, navigate } from "gatsby";
+import React, { useCallback } from "react";
+import { navigate } from "gatsby";
 
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
@@ -12,50 +12,43 @@ const SignupPage = () => {
   const input = useSelector(({ user }) => user.input).toJS();
   const email = input.email;
   const password = input.password;
+  const password2 = input.password2;
   const nickName = input.nickname;
-  const [password2, setPassword2] = useState("");
-  console.log(input);
-  console.log(password2);
 
   const onChangeInput = useCallback(
     e => {
-      if (e.target.name === "password2") {
-        setPassword2(e.target.value);
-      } else {
-        dispatch(
-          userActions.setInput({ key: e.target.name, value: e.target.value })
-        );
-      }
+      dispatch(
+        userActions.setInput({ key: e.target.name, value: e.target.value })
+      );
     },
-    [password2]
+    [dispatch]
   );
 
-  const checkFillInput = () => {
+  const checkFillInput = useCallback(() => {
     if (email === "" || password === "" || password2 === "" || nickName === "")
       return false;
     else return true;
-  };
+  }, [email, password, password2, nickName]);
 
-  const checkEmail = () => {
-    const reg = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+  const checkEmail = useCallback(() => {
+    const reg = /^[0-9a-zA-Z]([-_]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
     if (reg.test(email)) return true;
     else return false;
-  };
+  }, [email]);
 
-  const checkPassword = () => {
+  const checkPassword = useCallback(() => {
     const reg = /^[0-9]{6}/;
     if (reg.test(password2)) return true;
     else return false;
-  };
+  }, [password2]);
 
-  const checkPasswordEqual = () => {
+  const checkPasswordEqual = useCallback(() => {
     if (password === password2) return true;
     else return false;
-  };
+  }, [password, password2]);
 
   const onClickNext = useCallback(() => {
     if (!checkFillInput()) {
-      console.log(nickName);
       alert("모든 칸을 입력해주세요.");
     } else if (!checkEmail()) {
       alert("이메일 형식을 올바르게 입력해주세요.");
@@ -66,7 +59,7 @@ const SignupPage = () => {
     } else {
       navigate("/signupfin");
     }
-  }, [input, email, password, password2, nickName]);
+  }, [checkFillInput, checkEmail, checkPassword, checkPasswordEqual]);
 
   return (
     <Container>
