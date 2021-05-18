@@ -1,5 +1,7 @@
 import React, { useEffect, useCallback, useState } from "react";
 import { Link } from "gatsby";
+
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
 import GlobalStyles from "../components/globalstyles";
@@ -8,53 +10,59 @@ import cameraIcon from "../assets/svgs/camera.svg";
 import * as userActions from "../store/modules/user";
 import * as commonActions from "../store/modules/common";
 
-import { get, signup } from "../utils/http";
-import { useDispatch, useSelector } from "react-redux";
+import { get, signupAxios } from "../utils/http";
 
 const SignupFinPage = () => {
   const dispatch = useDispatch();
-  const sector = useSelector(({ signup }) => signup.sector);
-  const region = useSelector(({ signup }) => signup.region);
-  const image = useSelector(({ signup }) => signup.image);
-
-  const onChangeInput = useCallback(e => {
-    dispatch(
-      userActions.setInput({ key: e.target.name, value: e.target.value })
-    );
-  }, []);
+  const input = useSelector(({ user }) => user.input).toJS();
+  const sector = input.sector_no;
+  const region = input.region_bcode;
+  const image = input.img;
+  console.log(input);
 
   const [sectorList, setSectorList] = useState([]);
   const [regionList1, setRegionList1] = useState([]);
   const [regionList2, setRegionList2] = useState([]);
   const [regionList3, setRegionList3] = useState([]);
 
+  // const [region1, setRegion1] = useState(0);
+
+  const [isFirstSelected, setIsFirstSelected] = useState(false);
+  const [isSecondSelected, setIsSecondSelected] = useState(false);
+
   const getSectorList = useCallback(() => {
     get(`/user/selectSectors`, data => {
-      setSectorList(data.sector_list);
+      setSectorList(data.results);
     });
   }, []);
 
   const getRegionList1 = useCallback(() => {
     get(`/user/selectregion1`, data => {
-      setRegionList1(data.region_list1);
+      setRegionList1(data.result);
     });
   }, []);
 
   useEffect(() => {
+    if (input.email === "") {
+      console.log("네비게이트");
+    }
     getSectorList();
     getRegionList1();
   }, [getSectorList, getRegionList1]);
 
-  const [isFirstSelected, setIsFirstSelected] = useState(false);
-  const [isSecondSelected, setIsSecondSelected] = useState(false);
+  const onChangeInput = useCallback(e => {
+    console.log(e.target.value);
+    dispatch(
+      userActions.setInput({ key: e.target.name, value: e.target.value })
+    );
+  }, []);
 
   const onSelectFirstRegion = useCallback(
     e => {
-      const region1No = 1; //임시 변수
+      const region1No = e.target.value; //임시 변수
       get(`/user/selectregion2?region_1_no=${region1No}`, data => {
-        setRegionList2(data.region_list2);
+        setRegionList2(data.results);
         setIsFirstSelected(true);
-        //e.target.value 저장하기
       });
     },
     [regionList1]
@@ -62,15 +70,21 @@ const SignupFinPage = () => {
 
   const onSelectSecondRegion = useCallback(
     e => {
-      const region2No = 1; //임시 변수
+      const region2No = e.target.value; //임시 변수
       get(`/user/selectregion3?region_2_no=${region2No}`, data => {
-        setRegionList3(data.region_list3);
+        setRegionList3(data.results);
         setIsSecondSelected(true);
-        //e.target.value 저장하기
       });
     },
     [regionList2]
   );
+
+  const onClickSignup = useCallback(() => {
+    console.log("회원가입");
+    signupAxios(`/user`, { ...input }, res => {
+      console.log(res);
+    });
+  }, [input]);
 
   return (
     <Container>
@@ -88,13 +102,13 @@ const SignupFinPage = () => {
       <InputContainer>
         <OneInput>
           <Inputcaption>업종 선택</Inputcaption>
-          <Select name="sector" onChange={onChangeInput}>
+          <Select name="sector_no" onChange={onChangeInput}>
             <Option value="default" defaultValue>
               해당하는 업장을 선택해주세요
             </Option>
             {sectorList &&
-              sectorList.map((sector, idx) => (
-                <Option key={idx} value={sector.sector_name}>
+              sectorList.map(sector => (
+                <Option key={sector.no} value={sector.no}>
                   {sector.sector_name}
                 </Option>
               ))}
@@ -107,8 +121,8 @@ const SignupFinPage = () => {
               시도
             </Option>
             {regionList1 &&
-              regionList1.map((region, idx) => (
-                <Option key={idx} value={region.bname}>
+              regionList1.map(region => (
+                <Option key={region.no} value={region.no}>
                   {region.bname}
                 </Option>
               ))}
@@ -122,15 +136,15 @@ const SignupFinPage = () => {
               시구군
             </Option>
             {regionList2 &&
-              regionList2.map((region, idx) => (
-                <Option key={idx} value={region.bname}>
+              regionList2.map(region => (
+                <Option key={region.no} value={region.no}>
                   {region.bname}
                 </Option>
               ))}
           </SelectRegion>
 
           <SelectRegion
-            name="region"
+            name="region_bcode"
             onChange={onChangeInput}
             disabled={!isSecondSelected}
           >
@@ -138,18 +152,18 @@ const SignupFinPage = () => {
               법정동
             </Option>
             {regionList3 &&
-              regionList3.map((region, idx) => (
-                <Option key={idx} value={region.bname}>
+              regionList3.map(region => (
+                <Option key={region.no} value={region.bcode}>
                   {region.bname}
                 </Option>
               ))}
           </SelectRegion>
         </RegionContainer>
-        <AddImg to="#">
+        <AddImg>
           <Object type="image/svg+xml" data={cameraIcon} />
           <MyDropzone text="사업자 등록증 사진 추가" />
         </AddImg>
-        <Button name="signup" to="#">
+        <Button name="signup" onClick={onClickSignup}>
           회원가입 요청
         </Button>
         <Button name="cancel" to="/login">
@@ -246,7 +260,7 @@ const Inputcaption = styled.div`
   padding: 5px;
 `;
 
-const AddImg = styled(Link)`
+const AddImg = styled.button`
   width: 290px;
   height: 45px;
   padding: 10px 0;
@@ -257,6 +271,8 @@ const AddImg = styled(Link)`
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+  background: #fff;
 `;
 
 const Object = styled.object`
@@ -275,7 +291,4 @@ const Button = styled.button`
   border: ${props => (props.name === "signup" ? "#5c3ec2" : "#000")};
   border-radius: 4px;
   cursor: pointer;
-  &:hover {
-    font-size: 15px;
-  }
 `;

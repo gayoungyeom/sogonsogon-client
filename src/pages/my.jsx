@@ -1,26 +1,31 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "gatsby";
 
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
+import { get, put } from "../utils/http";
+import * as userActions from "../store/modules/user";
 import Layout from "../components/layout";
 import SEO from "../components/seo";
 import Nav from "../components/nav";
 import Post from "../components/post";
 import Pagination from "../components/pagination";
-import { get, put } from "../utils/http";
-import { useDispatch, useSelector } from "react-redux";
-import * as userActions from "../store/modules/user";
 
 const MyPage = ({ location }) => {
   const dispatch = useDispatch();
   const input = useSelector(({ user }) => user.input).toJS();
+  const posts = useSelector(({ user }) => user.myPosts);
   const email = input.email || "";
   const nickName = input.nickName || "";
   const password = input.password || "";
   const password2 = input.password2 || "";
 
-  const posts = useSelector(({ user }) => user.myPosts);
+  const PER_PAGE = 10;
+  const [curPage, setCurPage] = useState(1);
+  const [totalCnt, setTotalCnt] = useState(0);
+  const [isChangePw, setIsChangePw] = useState(false); //change pw
+  const [curType, setCurType] = useState("first"); //nav control
 
   const getInfo = useCallback(() => {
     get(`/user`, data => {
@@ -28,6 +33,16 @@ const MyPage = ({ location }) => {
       dispatch(userActions.setInput({ key: "nickName", value: data.nickname }));
     });
   }, [dispatch]);
+
+  const getMyPosts = useCallback(
+    page => {
+      get(`/board/list/mine?page=${page}&count=${PER_PAGE}`, data => {
+        dispatch(userActions.setMyPosts(data.results));
+        setTotalCnt(data.total_count);
+      });
+    },
+    [curPage, PER_PAGE, dispatch]
+  );
 
   useEffect(() => {
     getInfo();
@@ -46,7 +61,6 @@ const MyPage = ({ location }) => {
     });
   }, [nickName]);
 
-  const [isChangePw, setIsChangePw] = useState(false);
   const editPassword = useCallback(() => {
     if (!isChangePw) {
       setIsChangePw(true);
@@ -63,8 +77,6 @@ const MyPage = ({ location }) => {
     }
   }, [password, password2]);
 
-  //nav control
-  const [curType, setCurType] = useState("first");
   const editClickHandler = () => {
     setCurType("first");
   };
@@ -72,25 +84,10 @@ const MyPage = ({ location }) => {
     setCurType("second");
   };
 
-  //pagination
-  const PER_PAGE = 10;
-  const [curPage, setCurPage] = useState(1);
-  const [totalCnt, setTotalCnt] = useState(0);
-
   const paginationHandler = current => {
     setCurPage(current);
     getMyPosts(current - 1);
   };
-
-  const getMyPosts = useCallback(
-    page => {
-      get(`/board/list/mine?page=${page}&count=${PER_PAGE}`, data => {
-        dispatch(userActions.setMyPosts(data.results1));
-        setTotalCnt(data.total_count);
-      });
-    },
-    [curPage, PER_PAGE, dispatch]
-  );
 
   return (
     <Layout isBack={true}>

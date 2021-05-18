@@ -1,30 +1,27 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Link, navigate } from "gatsby";
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { navigate } from "gatsby";
 
-import * as commonActions from "../store/modules/common";
-import * as userActions from "../store/modules/user";
-import * as boardActions from "../store/modules/board";
+import { useDispatch, useSelector } from "react-redux";
+import styled from "styled-components";
 
 import { get, put } from "../utils/http";
-
+import * as userActions from "../store/modules/user";
+import * as boardActions from "../store/modules/board";
 import Layout from "../components/layout";
 import SEO from "../components/seo";
 import Nav from "../components/nav";
 
-import styled from "styled-components";
-
 const EditPage = ({ location }) => {
-  const dispatch = useDispatch();
   const postNo = location.state.postNo;
-  // const post = useSelector(({ board }) => board.post);
-  const data = useSelector(({ board }) => board.input).toJS();
-  console.log(data);
 
+  const dispatch = useDispatch();
   const regionBecode = useSelector(({ common }) => common.regionBcode);
   const sectorNo = useSelector(({ common }) => common.sectorNo);
-
   const navNames = useSelector(({ user }) => user.navNames);
+  const data = useSelector(({ board }) => board.input).toJS();
+
+  const [curType, setCurType] = useState("first");
+
   const getNavNames = useCallback(() => {
     get(
       `/user/getName?region_bcode=${regionBecode}&sector_no=${sectorNo}`,
@@ -74,8 +71,6 @@ const EditPage = ({ location }) => {
       }
     );
   }, [data]);
-
-  const [curType, setCurType] = useState("first");
 
   const regionClickHandler = () => {
     setCurType("first");

@@ -1,11 +1,11 @@
 import * as React from "react";
 import { Link, navigate } from "gatsby";
-import PropTypes from "prop-types";
-import SearchIcon from "./searchIcon";
 
+import PropTypes from "prop-types";
 import styled from "styled-components";
+
+import SearchIcon from "./searchIcon";
 import back from "../assets/svgs/back.svg";
-import { useSelector } from "react-redux";
 
 const Container = styled.div`
   width: 100%;

@@ -1,14 +1,15 @@
 import React, { useCallback, useEffect } from "react";
-import PropTypes from "prop-types";
 import { useStaticQuery, graphql } from "gatsby";
-import styled from "styled-components";
 
-import Header from "./header";
-import GlobalStyles from "./globalstyles";
-import "./layout.css";
 import { useDispatch } from "react-redux";
 import { useCookies } from "react-cookie";
+import PropTypes from "prop-types";
+import styled from "styled-components";
+
 import * as commonActions from "../store/modules/common";
+import GlobalStyles from "./globalstyles";
+import Header from "./header";
+import "./layout.css";
 
 const Body = styled.div`
   margin: 0 auto;

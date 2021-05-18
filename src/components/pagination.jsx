@@ -1,9 +1,9 @@
 import React from "react";
+
 import PropTypes from "prop-types";
 import Pagination from "rc-pagination";
 
 import "rc-pagination/assets/index.css";
-
 import "./pagination.css";
 
 const PaginationComponent = ({ current, total, pageSize, onChange }) => {

@@ -1,9 +1,11 @@
 import React, { useCallback, useState } from "react";
-import { Link, navigate } from "gatsby";
+import { navigate } from "gatsby";
+
 import { useDispatch, useSelector } from "react-redux";
+import styled from "styled-components";
 
+import { get } from "../utils/http";
 import * as boardActions from "../store/modules/board";
-
 import Layout from "../components/layout";
 import SEO from "../components/seo";
 import Post from "../components/post";
@@ -11,25 +13,16 @@ import Pagination from "../components/pagination";
 import SearchIcon from "../components/searchIcon";
 import back from "../assets/svgs/back.svg";
 
-import styled from "styled-components";
-import { get } from "../utils/http";
-
 const SearchPage = ({ location }) => {
   const dispatch = useDispatch();
   const allPosts = useSelector(({ board }) => board.allPosts);
 
-  const [isSearched, setIsSearched] = useState(false);
-
   const PER_PAGE = 10;
   const [curPage, setCurPage] = useState(1);
   const [totalCnt, setTotalCnt] = useState(0);
-
-  const paginationHandler = current => {
-    setCurPage(current);
-    getResults(current - 1);
-  };
-
   const [input, setInput] = useState("");
+  const [isSearched, setIsSearched] = useState(false);
+
   const onChangeInput = useCallback(
     e => {
       setInput(e.target.value);
@@ -55,6 +48,15 @@ const SearchPage = ({ location }) => {
     getResults(0);
   }, [input]);
 
+  const onKeyPress = e => {
+    e.key === "Enter" && onClickSearch();
+  };
+
+  const paginationHandler = current => {
+    setCurPage(current);
+    getResults(current - 1);
+  };
+
   return (
     <Layout isShow={false}>
       <SEO title="Search" />
@@ -70,7 +72,11 @@ const SearchPage = ({ location }) => {
               fill={`#212529`}
             />
           </Img>
-          <Input placeholder={`제목을 입력하세요`} onChange={onChangeInput} />
+          <Input
+            placeholder={`제목을 입력하세요`}
+            onChange={onChangeInput}
+            onKeyPress={onKeyPress}
+          />
           <Search onClick={onClickSearch}>검색</Search>
         </InputContainer>
         {!isSearched ? (
@@ -89,27 +95,33 @@ const SearchPage = ({ location }) => {
           </>
         ) : (
           <>
-            {allPosts &&
-              allPosts.map(post => (
-                <Post
-                  key={post.board_no}
-                  no={post.board_no}
-                  title={post.title}
-                  author={post.nickname}
-                  createDate={post.create_datetime}
-                  like={post.likes}
-                  comment={post.comments}
-                />
-              ))}
+            {totalCnt ? (
+              <>
+                {allPosts &&
+                  allPosts.map(post => (
+                    <Post
+                      key={post.board_no}
+                      no={post.board_no}
+                      title={post.title}
+                      author={post.nickname}
+                      createDate={post.create_datetime}
+                      like={post.likes}
+                      comment={post.comments}
+                    />
+                  ))}
 
-            <PaginationWrap>
-              <Pagination
-                current={curPage}
-                total={totalCnt}
-                pageSize={PER_PAGE}
-                onChange={paginationHandler}
-              />
-            </PaginationWrap>
+                <PaginationWrap>
+                  <Pagination
+                    current={curPage}
+                    total={totalCnt}
+                    pageSize={PER_PAGE}
+                    onChange={paginationHandler}
+                  />
+                </PaginationWrap>
+              </>
+            ) : (
+              <Content>검색 결과가 존재하지 않습니다</Content>
+            )}
           </>
         )}
       </Container>

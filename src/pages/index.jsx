@@ -1,15 +1,13 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, navigate } from "gatsby";
 
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { useCookies } from "react-cookie";
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
 
-import * as commonActions from "../store/modules/common";
+import { get, post } from "../utils/http";
 import * as boardActions from "../store/modules/board";
 import * as userActions from "../store/modules/user";
-import { get, post } from "../utils/http";
-
 import Layout from "../components/layout";
 import SEO from "../components/seo";
 import Post from "../components/post";
@@ -20,18 +18,15 @@ import boardIcon from "../assets/svgs/board.svg";
 
 const IndexPage = ({ location }) => {
   const dispatch = useDispatch();
-
   const regionBecode = useSelector(({ common }) => common.regionBcode);
   const sectorNo = useSelector(({ common }) => common.sectorNo);
-
   const navNames = useSelector(({ user }) => user.navNames);
-
   const bestPosts = useSelector(({ board }) => board.bestPosts, shallowEqual);
   const allPosts = useSelector(({ board }) => board.allPosts, shallowEqual);
 
-  // console.log(bestPosts.toJS());
-
   const [cookies] = useCookies(["token"]);
+  const [curType, setCurType] = useState("first");
+
   const isLogin = useCallback(() => {
     if (cookies["token"]) {
       regionClickHandler();
@@ -51,14 +46,11 @@ const IndexPage = ({ location }) => {
     //deps에 왜 이게 들어가는지 이해가 안되네..navNames넣으면 무한루프에 빠지고..
   }, [regionBecode, sectorNo]);
 
-  const [curType, setCurType] = useState("first");
-
   const regionClickHandler = useCallback(() => {
     setCurType("first");
     get(
       `/board/list/best?category=region&category_no=${regionBecode}`,
       data => {
-        console.log(data);
         dispatch(boardActions.setBestPosts(data.results));
       }
     );

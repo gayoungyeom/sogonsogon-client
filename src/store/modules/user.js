@@ -13,11 +13,10 @@ export const setMyPosts = createAction(SET_MY_POSTS, posts => posts);
 const input = Map({
   email: "",
   password: "",
-  password2: "",
-  nickName: "",
-  sector: "",
-  region: "",
-  image: ""
+  nickname: "",
+  sector_no: "",
+  region_bcode: "",
+  img: ""
 });
 
 const initialState = Record({

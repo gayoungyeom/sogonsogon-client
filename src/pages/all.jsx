@@ -1,13 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Link } from "gatsby";
 
-import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { get, post } from "../utils/http";
+import styled from "styled-components";
 
+import { get } from "../utils/http";
 import * as boardActions from "../store/modules/board";
 import * as userActions from "../store/modules/user";
-
 import Layout from "../components/layout";
 import SEO from "../components/seo";
 import Post from "../components/post";
@@ -18,11 +16,16 @@ import boardIcon from "../assets/svgs/board.svg";
 
 const AllPage = ({ location }) => {
   const dispatch = useDispatch();
-
   const regionBcode = useSelector(({ common }) => common.regionBcode);
   const sectorNo = useSelector(({ common }) => common.sectorNo);
-
   const navNames = useSelector(({ user }) => user.navNames);
+  const allPosts = useSelector(({ board }) => board.allPosts);
+
+  const PER_PAGE = 10;
+  const [curPage, setCurPage] = useState(1);
+  const [totalCnt, setTotalCnt] = useState(0);
+  const [curType, setCurType] = useState("first");
+
   const getNavNames = useCallback(() => {
     get(
       `/user/getName?region_bcode=${regionBcode}&sector_no=${sectorNo}`,
@@ -32,25 +35,6 @@ const AllPage = ({ location }) => {
       }
     );
   }, [regionBcode, sectorNo, dispatch]);
-
-  const allPosts = useSelector(({ board }) => board.allPosts);
-
-  const PER_PAGE = 10;
-  const [curPage, setCurPage] = useState(1);
-  const [totalCnt, setTotalCnt] = useState(0);
-
-  const paginationHandler = current => {
-    setCurPage(current);
-    if (curType === "first") getPosts(current - 1, "region");
-    else getPosts(current - 1, "sector");
-  };
-
-  useEffect(() => {
-    getPosts(0, "region");
-    getNavNames();
-  }, [getPosts, getNavNames]);
-
-  const [curType, setCurType] = useState("first");
 
   const getPosts = useCallback(
     async (page, category) => {
@@ -67,6 +51,17 @@ const AllPage = ({ location }) => {
     },
     [PER_PAGE, curType]
   );
+
+  useEffect(() => {
+    getNavNames();
+    getPosts(0, "region");
+  }, [getNavNames, getPosts]);
+
+  const paginationHandler = current => {
+    setCurPage(current);
+    if (curType === "first") getPosts(current - 1, "region");
+    else getPosts(current - 1, "sector");
+  };
 
   const regionClickHandler = useCallback(() => {
     setCurType("first");

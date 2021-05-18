@@ -1,24 +1,20 @@
 import React, { useCallback, useState } from "react";
 import { Link, navigate } from "gatsby";
-import { useCookies } from "react-cookie";
+
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import { useCookies } from "react-cookie";
 
-import GlobalStyles from "../components/globalstyles";
-import * as commonActions from "../store/modules/common";
 import { login } from "../utils/http";
-
-const checkFillInput = form => {
-  if (form.email === "" || form.password === "") return false;
-  else return true;
-};
+import * as commonActions from "../store/modules/common";
+import GlobalStyles from "../components/globalstyles";
 
 const LoginPage = () => {
+  const dispatch = useDispatch();
   const [tokenCookie, setTokenCookie] = useCookies(["token"]);
   const [sectorCookie, setSectorCookie] = useCookies(["sector"]);
   const [regionCookie, setRegionCookie] = useCookies(["region"]);
 
-  const dispatch = useDispatch();
   const setToken = useCallback(
     token => dispatch(commonActions.setToken(token)),
     [dispatch]
@@ -48,12 +44,20 @@ const LoginPage = () => {
     [form]
   );
 
+  const onKeyPress = e => {
+    e.key === "Enter" && onClickLogin();
+  };
+
+  const checkFillInput = () => {
+    if (form.email === "" || form.password === "") return false;
+    else return true;
+  };
+
   const onClickLogin = useCallback(() => {
-    if (!checkFillInput(form)) {
+    if (!checkFillInput()) {
       alert("모든 칸을 입력해주세요.");
     } else {
       login(`/login`, { ...form }, data => {
-        console.log(data);
         if (!data.message) {
           const curToken = data.token;
           const curSector = data.sector_no;
@@ -79,6 +83,7 @@ const LoginPage = () => {
         name="email"
         type="text"
         onChange={onChangeInput}
+        onKeyPress={onKeyPress}
       />
       <Input
         placeholder="비밀번호를 입력해주세요"
@@ -86,6 +91,7 @@ const LoginPage = () => {
         type="password"
         maxLength="6"
         onChange={onChangeInput}
+        onKeyPress={onKeyPress}
       />
       <Button name="login" onClick={onClickLogin}>
         로그인

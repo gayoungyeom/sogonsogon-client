@@ -1,24 +1,23 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Link, navigate } from "gatsby";
+import { navigate } from "gatsby";
 
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+
+import { get, postData } from "../utils/http";
 import * as boardActions from "../store/modules/board";
 import * as userActions from "../store/modules/user";
-
 import Layout from "../components/layout";
 import SEO from "../components/seo";
 import Nav from "../components/nav";
-import { get, postData } from "../utils/http";
-import { useDispatch, useSelector, shallowEqual } from "react-redux";
 
 const CreatePage = ({ location }) => {
   const dispatch = useDispatch();
-  const data = useSelector(({ board }) => board.input).toJS();
-  console.log(data);
   const regionBcode = useSelector(({ common }) => common.regionBcode);
   const sectorNo = useSelector(({ common }) => common.sectorNo);
-
   const navNames = useSelector(({ user }) => user.navNames);
+  const data = useSelector(({ board }) => board.input).toJS();
+
   const getNavNames = useCallback(() => {
     get(
       `/user/getName?region_bcode=${regionBcode}&sector_no=${sectorNo}`,
@@ -27,6 +26,11 @@ const CreatePage = ({ location }) => {
       }
     );
   }, [regionBcode, sectorNo, dispatch]);
+
+  useEffect(() => {
+    getNavNames();
+    regionClickHandler();
+  }, [getNavNames, regionClickHandler]);
 
   const onChangeInput = useCallback(e => {
     dispatch(
@@ -49,20 +53,24 @@ const CreatePage = ({ location }) => {
   };
 
   const onClickRegister = useCallback(() => {
+    console.log(data);
     if (data.title === "" || data.content === "") {
       alert("제목과 내용을 모두 입력해주세요.");
     } else {
       postData(`/board`, { ...data }, data => {
         alert(`${data.message}`);
-        navigate("/all"); //해당 게시글로 이동 or 전체 게시글로 이동?
+        dispatch(
+          boardActions.setInput({
+            category: "",
+            category_no: "",
+            content: "",
+            title: ""
+          })
+        );
+        navigate("/all");
       });
     }
   }, [data]);
-
-  useEffect(() => {
-    getNavNames();
-    // dispatch(boardActions.setInput({ key: "category_no", value: sectorNo }));
-  }, [getNavNames]);
 
   return (
     <Layout isBack={true}>
