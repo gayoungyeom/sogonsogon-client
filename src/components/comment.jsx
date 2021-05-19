@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 
 import deleteIcon from "../assets/svgs/delete.svg";
+import dateformat from "../utils/dateformat";
 
 const Comment = ({
   no,
@@ -18,7 +19,7 @@ const Comment = ({
       <Wrap>
         <Author>{author}</Author>
         <Bar>|</Bar>
-        <CreateDate>{createDate}</CreateDate>
+        <CreateDate>{dateformat(createDate)}</CreateDate>
         {isMine && <Icon onClick={onClickDelete} />}
       </Wrap>
       <Content>{content}</Content>

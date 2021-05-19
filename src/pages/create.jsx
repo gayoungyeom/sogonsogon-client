@@ -3,6 +3,7 @@ import { navigate } from "gatsby";
 
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import { useCookies } from "react-cookie";
 
 import { get, postData } from "../utils/http";
 import * as boardActions from "../store/modules/board";
@@ -18,6 +19,9 @@ const CreatePage = ({ location }) => {
   const navNames = useSelector(({ user }) => user.navNames);
   const data = useSelector(({ board }) => board.input).toJS();
 
+  const [cookies] = useCookies(["token"]);
+  const [curType, setCurType] = useState("first");
+
   const getNavNames = useCallback(() => {
     get(
       `/user/getName?region_bcode=${regionBcode}&sector_no=${sectorNo}`,
@@ -27,33 +31,35 @@ const CreatePage = ({ location }) => {
     );
   }, [regionBcode, sectorNo, dispatch]);
 
-  useEffect(() => {
-    getNavNames();
-    regionClickHandler();
-  }, [getNavNames, regionClickHandler]);
-
-  const onChangeInput = useCallback(e => {
-    dispatch(
-      boardActions.setInput({ key: e.target.name, value: e.target.value })
-    );
-  }, []);
-
-  const [curType, setCurType] = useState("first");
-
-  const regionClickHandler = () => {
+  const regionClickHandler = useCallback(() => {
     setCurType("first");
     dispatch(boardActions.setInput({ key: "category", value: "region" }));
     dispatch(boardActions.setInput({ key: "category_no", value: regionBcode }));
-  };
+  }, [setCurType, dispatch, regionBcode]);
 
-  const sectorClickHandler = () => {
+  const sectorClickHandler = useCallback(() => {
     setCurType("second");
     dispatch(boardActions.setInput({ key: "category", value: "sector" }));
     dispatch(boardActions.setInput({ key: "category_no", value: sectorNo }));
-  };
+  }, [setCurType, dispatch, sectorNo]);
+
+  useEffect(() => {
+    if (cookies["token"]) {
+      getNavNames();
+      regionClickHandler();
+    }
+  }, [cookies, getNavNames, regionClickHandler]);
+
+  const onChangeInput = useCallback(
+    e => {
+      dispatch(
+        boardActions.setInput({ key: e.target.name, value: e.target.value })
+      );
+    },
+    [dispatch]
+  );
 
   const onClickRegister = useCallback(() => {
-    console.log(data);
     if (data.title === "" || data.content === "") {
       alert("제목과 내용을 모두 입력해주세요.");
     } else {
@@ -70,7 +76,7 @@ const CreatePage = ({ location }) => {
         navigate("/all");
       });
     }
-  }, [data]);
+  }, [data, dispatch]);
 
   return (
     <Layout isBack={true}>

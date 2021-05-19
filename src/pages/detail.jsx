@@ -3,6 +3,7 @@ import { Link, navigate } from "gatsby";
 
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import { useCookies } from "react-cookie";
 
 import { deleteData, get, postData, put } from "../utils/http";
 import * as boardActions from "../store/modules/board";
@@ -14,6 +15,7 @@ import heartIcon from "../assets/svgs/heart.svg";
 import commentIcon from "../assets/svgs/comment.svg";
 import emptyHeartIcon from "../assets/svgs/emptyHeart.svg";
 import flyIcon from "../assets/svgs/fly.svg";
+import dateformat from "../utils/dateformat";
 
 const DetailPage = ({ location }) => {
   const dispatch = useDispatch();
@@ -29,14 +31,17 @@ const DetailPage = ({ location }) => {
   const [totalComment, setTotalComment] = useState(0);
   const [isLast, setIsLast] = useState(false);
   const [isLike, setIsLike] = useState(false);
+  const [cookies] = useCookies(["token"]);
 
   const getPost = useCallback(() => {
     get(`/board?board_no=${postNo}`, data => {
       dispatch(boardActions.setPost(data));
       setIsMine(data.is_mine);
+      setIsLike(data.is_like);
       setLikeCnt(data.likes);
+      setTotalComment(data.comments);
     });
-  }, [postNo, isMine, setIsLike, dispatch]);
+  }, [postNo, dispatch]);
 
   const getComments = useCallback(() => {
     get(
@@ -51,20 +56,22 @@ const DetailPage = ({ location }) => {
   }, [PER_PAGE, curPage, postNo, dispatch]);
 
   useEffect(() => {
-    getPost();
-    getComments();
-  }, [getPost, getComments]);
+    if (cookies["token"]) {
+      getPost();
+      getComments();
+    }
+  }, [cookies, getPost, getComments]);
 
   const onClickLike = useCallback(() => {
     if (isLike) {
-      put(`/board/like/down?board_no=${postNo}`, {}, data => {
-        setIsLike(!isLike);
-        setLikeCnt(likeCnt - 1);
-      });
-    } else {
       put(`/board/like/up?board_no=${postNo}`, {}, data => {
         setIsLike(!isLike);
         setLikeCnt(likeCnt + 1);
+      });
+    } else {
+      put(`/board/like/down?board_no=${postNo}`, {}, data => {
+        setIsLike(!isLike);
+        setLikeCnt(likeCnt - 1);
       });
     }
   }, [postNo, isLike, likeCnt]);
@@ -78,9 +85,12 @@ const DetailPage = ({ location }) => {
     }
   }, [curPage, totalComment]);
 
-  const onChangeInput = useCallback(e => {
-    dispatch(boardActions.setComment(e.target.value));
-  }, []);
+  const onChangeInput = useCallback(
+    e => {
+      dispatch(boardActions.setComment(e.target.value));
+    },
+    [dispatch]
+  );
 
   const createComment = useCallback(() => {
     postData(`/comment`, { board_no: postNo, text: comment }, data => {
@@ -88,7 +98,7 @@ const DetailPage = ({ location }) => {
       dispatch(boardActions.setComment(""));
       getComments();
     });
-  }, [postNo, comment]);
+  }, [postNo, comment, dispatch, getComments]);
 
   const onKeyPress = e => {
     if (e.key === "Enter") createComment();
@@ -109,10 +119,11 @@ const DetailPage = ({ location }) => {
         const deletedNo = comments[idx].no;
         deleteData(`/comment?comment_no=${deletedNo}`, {}, data => {
           dispatch(boardActions.deleteComment(idx));
+          setTotalComment(totalComment => totalComment - 1);
         });
       }
     },
-    [comments]
+    [comments, dispatch]
   );
 
   return (
@@ -126,7 +137,7 @@ const DetailPage = ({ location }) => {
             <ABDWrap>
               <Author>익명의 사나이</Author>
               <Bar>|</Bar>
-              <Date>{post.create_datetime}</Date>
+              <Date>{dateformat(post.create_datetime)}</Date>
             </ABDWrap>
             {isMine && (
               <EditDeleteWrap>
@@ -142,21 +153,33 @@ const DetailPage = ({ location }) => {
             <CommuRight>
               <ViewImg>
                 <SVG>
-                  <object type="image/svg+xml" data={viewIcon} />
+                  <object
+                    type="image/svg+xml"
+                    aria-label="view"
+                    data={viewIcon}
+                  />
                 </SVG>
                 {post.views}
               </ViewImg>
               <LikeImg>
                 <SVG>
-                  <object type="image/svg+xml" data={heartIcon} />
+                  <object
+                    type="image/svg+xml"
+                    aria-label="like"
+                    data={heartIcon}
+                  />
                 </SVG>
                 {likeCnt}
               </LikeImg>
               <CommentImg>
                 <SVG>
-                  <object type="image/svg+xml" data={commentIcon} />
+                  <object
+                    type="image/svg+xml"
+                    aria-label="comment"
+                    data={commentIcon}
+                  />
                 </SVG>
-                {post.comments}
+                {totalComment}
               </CommentImg>
             </CommuRight>
             <LikeBtn isLike={isLike} onClick={onClickLike}>
@@ -165,7 +188,7 @@ const DetailPage = ({ location }) => {
           </CommuContainer>
         </Post>
         <CommentContainer>
-          <CommentCnt>댓글 70</CommentCnt>
+          <CommentCnt>댓글 {totalComment}</CommentCnt>
           {comments &&
             comments.map((comment, idx) => (
               <Comment
@@ -304,8 +327,8 @@ const LikeBtn = styled.button`
   justify-content: center;
   width: 65px;
   height: 26px;
-  color: ${props => (props.isLike ? "#fff" : "#5c3ec2")};
-  background: ${props => (props.isLike ? "#5c3ec2" : "#fff")};
+  color: ${props => (props.isLike ? "#5c3ec2" : "#fff")};
+  background: ${props => (props.isLike ? "#fff" : "#5c3ec2")};
   /* background: url(${emptyHeartIcon}) left no-repeat; */
   border: 1px solid #5c3ec2;
   border-radius: 4px;

@@ -8,13 +8,16 @@ const MyDropzone = ({ text }) => {
   const dispatch = useDispatch();
   const [isUpload, setIsUpload] = useState(false);
 
-  const onDrop = useCallback(acceptedFiles => {
-    const file = acceptedFiles[0];
-    dispatch(userActions.setInput({ key: "img", value: file }));
-    setIsUpload(true);
-  }, []);
+  const onDrop = useCallback(
+    acceptedFiles => {
+      const file = acceptedFiles[0];
+      dispatch(userActions.setInput({ key: "img", value: file }));
+      setIsUpload(true);
+    },
+    [dispatch]
+  );
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps } = useDropzone({
     accept: "image/*",
     multiple: false,
     onDrop

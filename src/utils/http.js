@@ -1,4 +1,5 @@
 import axios from "axios";
+import { navigate } from "gatsby-link";
 import store from "../store";
 
 const devUrl = `http://localhost:4000`;
@@ -17,6 +18,31 @@ const checkAuth = () => {
   };
 };
 
+const isError = e => {
+  if (e.response) {
+    if (e.response.status === 401) {
+      alert(`로그인 시간 만료`);
+      navigate("/login");
+    } else {
+      console.log(
+        "Error: ",
+        e.response.status,
+        e.response.data,
+        e.response.headers,
+        e.response.config,
+        e.response.message
+      );
+      alert(`${e.response.data.message}`);
+    }
+  } else if (e.request) {
+    console.log("요청이 이루어졌으나 응답이 없음.");
+    console.log("Error: ", e.request);
+  } else {
+    console.log("오류를 발생시킨 요청을 설정하는 중에 문제 발생.");
+    console.log("Error: ", e.message);
+  }
+};
+
 export const get = async (path, callback) => {
   const headers = checkAuth();
   try {
@@ -25,7 +51,7 @@ export const get = async (path, callback) => {
     });
     callback(res.data);
   } catch (e) {
-    console.log(e);
+    isError(e);
   }
 };
 
@@ -37,7 +63,7 @@ export const postData = async (path, data, callback) => {
     });
     callback(res.data);
   } catch (e) {
-    console.log(e);
+    isError(e);
   }
 };
 
@@ -49,7 +75,7 @@ export const put = async (path, data, callback) => {
     });
     callback(res.data);
   } catch (e) {
-    console.log(e);
+    isError(e);
   }
 };
 
@@ -62,7 +88,7 @@ export const deleteData = async (path, data, callback) => {
     });
     callback(res.data);
   } catch (e) {
-    console.log(e);
+    isError(e);
   }
 };
 
@@ -71,7 +97,7 @@ export const login = async (path, data, callback) => {
     const res = await axios.post(`${url()}${path}`, data);
     return callback(res.data);
   } catch (e) {
-    console.log(e);
+    isError(e);
   }
 };
 
@@ -80,6 +106,6 @@ export const signup = async (path, fd, callback) => {
     const res = await axios.post(`${url()}${path}`, fd);
     return callback(res.data);
   } catch (e) {
-    console.log(e);
+    isError(e);
   }
 };

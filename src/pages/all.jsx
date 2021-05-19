@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import { useCookies } from "react-cookie";
 
 import { get } from "../utils/http";
 import * as boardActions from "../store/modules/board";
@@ -25,12 +26,12 @@ const AllPage = ({ location }) => {
   const [curPage, setCurPage] = useState(1);
   const [totalCnt, setTotalCnt] = useState(0);
   const [curType, setCurType] = useState("first");
+  const [cookies] = useCookies(["token"]);
 
   const getNavNames = useCallback(() => {
     get(
       `/user/getName?region_bcode=${regionBcode}&sector_no=${sectorNo}`,
       data => {
-        console.log(data);
         dispatch(userActions.setNavName(data));
       }
     );
@@ -38,7 +39,6 @@ const AllPage = ({ location }) => {
 
   const getPosts = useCallback(
     async (page, category) => {
-      //새로고침 했을 때 regionBcode랑 sectorNo가 날라감, 새로 받는 속도보다 useEffect가 먼저 실행됨....
       const categoryNo = category === "region" ? regionBcode : sectorNo;
       console.log(category, categoryNo);
       get(
@@ -49,13 +49,17 @@ const AllPage = ({ location }) => {
         }
       );
     },
-    [PER_PAGE, curType]
+    [PER_PAGE, dispatch, regionBcode, sectorNo]
   );
 
   useEffect(() => {
-    getNavNames();
-    getPosts(0, "region");
-  }, [getNavNames, getPosts]);
+    if (cookies["token"]) {
+      if (regionBcode && sectorNo) {
+        getNavNames();
+        getPosts(0, "region");
+      }
+    }
+  }, [cookies, getNavNames, getPosts]);
 
   const paginationHandler = current => {
     setCurPage(current);
@@ -67,13 +71,13 @@ const AllPage = ({ location }) => {
     setCurType("first");
     setCurPage(1);
     getPosts(0, "region");
-  }, [curType, curPage]);
+  }, [getPosts]);
 
   const sectorClickHandler = useCallback(() => {
     setCurType("second");
     setCurPage(1);
     getPosts(0, "sector");
-  }, [curType, curPage]);
+  }, [getPosts]);
 
   return (
     <Layout isBack={true}>

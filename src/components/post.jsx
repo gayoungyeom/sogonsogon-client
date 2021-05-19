@@ -6,8 +6,8 @@ import styled from "styled-components";
 
 import heartIcon from "../assets/svgs/heart.svg";
 import commentIcon from "../assets/svgs/comment.svg";
+import dateformat from "../utils/dateformat";
 
-//Link로 넘길 때 post_id 넣어줘야 하니까 props로 postId 넣어주기
 const Post = ({ no, title, author, createDate, like, comment, rank }) => {
   return (
     <Link to="/detail" state={{ no }}>
@@ -20,16 +20,24 @@ const Post = ({ no, title, author, createDate, like, comment, rank }) => {
           <Left>
             <Author>{author}</Author>
             <Bar>|</Bar>
-            <CreateDate>{createDate}</CreateDate>
+            <CreateDate>{dateformat(createDate)}</CreateDate>
           </Left>
           <Right>
             <Span>
               <Emo>
-                <object type="image/svg+xml" data={heartIcon} />
+                <object
+                  type="image/svg+xml"
+                  aria-label="like"
+                  data={heartIcon}
+                />
               </Emo>
               {like}
               <Emo>
-                <object type="image/svg+xml" data={commentIcon} />
+                <object
+                  type="image/svg+xml"
+                  aria-label="comment"
+                  data={commentIcon}
+                />
               </Emo>
               {comment}
             </Span>
@@ -89,7 +97,7 @@ const Left = styled.span``;
 const Author = styled.span``;
 
 const Bar = styled.span`
-  padding: 0 5px;
+  padding: 0 10px;
 `;
 
 const CreateDate = styled.span``;

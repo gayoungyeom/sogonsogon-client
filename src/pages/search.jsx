@@ -3,6 +3,7 @@ import { navigate } from "gatsby";
 
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import { useCookies } from "react-cookie";
 
 import { get } from "../utils/http";
 import * as boardActions from "../store/modules/board";
@@ -22,6 +23,7 @@ const SearchPage = ({ location }) => {
   const [totalCnt, setTotalCnt] = useState(0);
   const [input, setInput] = useState("");
   const [isSearched, setIsSearched] = useState(false);
+  const [cookies] = useCookies(["token"]);
 
   const onChangeInput = useCallback(e => {
     setInput(e.target.value);
@@ -42,8 +44,10 @@ const SearchPage = ({ location }) => {
   );
 
   const onClickSearch = useCallback(() => {
-    getResults(0);
-  }, [getResults]);
+    if (cookies["token"]) {
+      getResults(0);
+    }
+  }, [cookies, getResults]);
 
   const onKeyPress = e => {
     e.key === "Enter" && onClickSearch();

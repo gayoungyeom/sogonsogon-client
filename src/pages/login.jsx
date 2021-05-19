@@ -8,6 +8,7 @@ import { useCookies } from "react-cookie";
 import { login } from "../utils/http";
 import * as commonActions from "../store/modules/common";
 import GlobalStyles from "../components/globalstyles";
+import logo from "../assets/img/logo.png";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
@@ -86,7 +87,9 @@ const LoginPage = () => {
   return (
     <Container>
       <GlobalStyles />
-      <Title>소곤소곤</Title>
+      <Title>
+        <Logo src={logo} alt="logo" />
+      </Title>
       <Input
         placeholder="이메일을 입력해주세요"
         name="email"
@@ -120,11 +123,12 @@ const Container = styled.div`
 `;
 
 const Title = styled.div`
-  font-size: 37px;
-  font-weight: bold;
   text-align: center;
-  padding: 10px;
-  margin-bottom: 28px;
+`;
+
+const Logo = styled.img`
+  width: 195px;
+  height: 65px;
 `;
 
 const Input = styled.input`

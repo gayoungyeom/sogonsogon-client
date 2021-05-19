@@ -6,80 +6,17 @@ import styled from "styled-components";
 
 import SearchIcon from "./searchIcon";
 import back from "../assets/svgs/back.svg";
-
-const Container = styled.div`
-  width: 100%;
-  height: 90px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 999;
-`;
-
-const Wrap = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 960px;
-  margin: 0 auto;
-  background: #f8f9fa;
-  padding: 1.45rem 1.0875rem;
-`;
-
-const Back = styled.button`
-  width: 30px;
-  height: 30px;
-  padding: 5px;
-  border: none;
-  cursor: pointer;
-  background: url(${back}) center no-repeat;
-  @media screen and (min-width: 960px) {
-    display: none;
-  }
-`;
-
-//로고 나오면 background ulr(img)로 바꾸기
-const Logo = styled(Link)`
-  display: inline-block;
-  align-self: center;
-  font-size: 28px;
-  font-weight: bold;
-`;
-
-const Span = styled.span`
-  display: flex;
-  align-items: center;
-  font-size: 12px;
-`;
-
-const Search = styled(Link)``;
-
-const Mypage = styled(Link)`
-  margin: 0 15px;
-  margin: 0 3vw;
-  font-weight: bold;
-`;
-
-const Create = styled(Link)`
-  display: flex;
-  width: 64px;
-  height: 45px;
-  justify-content: center;
-  align-items: center;
-  color: #fff;
-  background: #5c3ec2;
-  border-radius: 3px;
-`;
+import logo from "../assets/img/logo.png";
 
 const Header = ({ siteTitle, isBack }) => {
-  // const prevPath = useSelector(({ common }) => common.path);
   return (
     <Container>
       <Wrap>
         <Span>
           {isBack && <Back onClick={() => navigate(-1)} />}
-          <Logo to="/">소곤소곤</Logo>
+          <Logo to="/">
+            <LogoImg src={logo} alt="logo" />
+          </Logo>
         </Span>
         <Span>
           <Search to="/search">
@@ -110,3 +47,71 @@ Header.defaultProps = {
 };
 
 export default Header;
+
+const Container = styled.div`
+  width: 100%;
+  height: 70px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+`;
+
+const Wrap = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  background: #f8f9fa;
+  /* padding: 1.45rem 1.0875rem; */
+  padding: 1rem;
+`;
+
+const Back = styled.button`
+  width: 30px;
+  height: 30px;
+  padding: 5px;
+  border: none;
+  cursor: pointer;
+  background: url(${back}) center no-repeat;
+  @media screen and (min-width: 960px) {
+    display: none;
+  }
+`;
+
+const Logo = styled(Link)`
+  display: inline-block;
+  align-self: center;
+`;
+
+const LogoImg = styled.img`
+  width: 155px;
+  height: 50px;
+`;
+
+const Span = styled.span`
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+`;
+
+const Search = styled(Link)``;
+
+const Mypage = styled(Link)`
+  margin: 0 15px;
+  margin: 0 3vw;
+  font-weight: bold;
+`;
+
+const Create = styled(Link)`
+  display: flex;
+  width: 64px;
+  height: 45px;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  background: #5c3ec2;
+  border-radius: 3px;
+`;

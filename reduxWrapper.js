@@ -3,6 +3,8 @@ import { Provider } from "react-redux";
 
 import store from "./src/store";
 
-export default ({ element }) => {
+const reduxWrapper = ({ element }) => {
   return <Provider store={store}>{element}</Provider>;
 };
+
+export default reduxWrapper;

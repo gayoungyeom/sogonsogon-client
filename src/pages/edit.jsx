@@ -3,6 +3,7 @@ import { navigate } from "gatsby";
 
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import { useCookies } from "react-cookie";
 
 import { get, put } from "../utils/http";
 import * as userActions from "../store/modules/user";
@@ -20,6 +21,7 @@ const EditPage = ({ location }) => {
   const navNames = useSelector(({ user }) => user.navNames);
   const data = useSelector(({ board }) => board.input).toJS();
 
+  const [cookies] = useCookies(["token"]);
   const [curType, setCurType] = useState("first");
 
   const getNavNames = useCallback(() => {
@@ -30,6 +32,20 @@ const EditPage = ({ location }) => {
       }
     );
   }, [regionBecode, sectorNo, dispatch]);
+
+  const regionClickHandler = useCallback(() => {
+    setCurType("first");
+    dispatch(boardActions.setInput({ key: "category", value: "region" }));
+    dispatch(
+      boardActions.setInput({ key: "category_no", value: regionBecode })
+    );
+  }, [setCurType, dispatch, regionBecode]);
+
+  const sectorClickHandler = useCallback(() => {
+    setCurType("second");
+    dispatch(boardActions.setInput({ key: "category", value: "sector" }));
+    dispatch(boardActions.setInput({ key: "category_no", value: sectorNo }));
+  }, [setCurType, dispatch, sectorNo]);
 
   const getPost = useCallback(() => {
     get(`/board?board_no=${postNo}`, data => {
@@ -42,18 +58,23 @@ const EditPage = ({ location }) => {
 
       data.region_bcode ? regionClickHandler() : sectorClickHandler();
     });
-  }, [postNo, dispatch]);
+  }, [postNo, dispatch, regionClickHandler, sectorClickHandler]);
 
   useEffect(() => {
-    getNavNames();
-    getPost();
-  }, [getNavNames, getPost]);
+    if (cookies["token"]) {
+      getNavNames();
+      getPost();
+    }
+  }, [cookies, getNavNames, getPost]);
 
-  const onChangeInput = useCallback(e => {
-    dispatch(
-      boardActions.setInput({ key: e.target.name, value: e.target.value })
-    );
-  }, []);
+  const onChangeInput = useCallback(
+    e => {
+      dispatch(
+        boardActions.setInput({ key: e.target.name, value: e.target.value })
+      );
+    },
+    [dispatch]
+  );
 
   const onClickRegister = useCallback(() => {
     put(
@@ -70,21 +91,7 @@ const EditPage = ({ location }) => {
         navigate(`/detail`, { state: { no: postNo } });
       }
     );
-  }, [data]);
-
-  const regionClickHandler = () => {
-    setCurType("first");
-    dispatch(boardActions.setInput({ key: "category", value: "region" }));
-    dispatch(
-      boardActions.setInput({ key: "category_no", value: regionBecode })
-    );
-  };
-
-  const sectorClickHandler = () => {
-    setCurType("second");
-    dispatch(boardActions.setInput({ key: "category", value: "sector" }));
-    dispatch(boardActions.setInput({ key: "category_no", value: sectorNo }));
-  };
+  }, [data, postNo]);
 
   return (
     <Layout>

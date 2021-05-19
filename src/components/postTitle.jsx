@@ -37,7 +37,7 @@ const PostTitle = ({ title, svg, isMore }) => {
       <Title>
         {title}
         <Svg>
-          <object type="image/svg+xml" data={svg} />
+          <object type="image/svg+xml" aria-label="title" data={svg} />
         </Svg>
       </Title>
       {isMore && <More to="all">더보기 &gt;</More>}

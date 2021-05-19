@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect } from "react";
-import { useStaticQuery, graphql } from "gatsby";
+import React, { useCallback, useEffect, useState } from "react";
+import { useStaticQuery, graphql, navigate } from "gatsby";
 
 import { useDispatch } from "react-redux";
 import { useCookies } from "react-cookie";
@@ -14,7 +14,7 @@ import "./layout.css";
 const Body = styled.div`
   margin: 0 auto;
   max-width: 960px; //테블릿 size
-  margin-top: ${props => props.isShow && "90px"};
+  margin-top: ${props => props.isShow && "83px"};
 `;
 
 const Layout = ({ children, isShow, isBack }) => {
@@ -29,7 +29,6 @@ const Layout = ({ children, isShow, isBack }) => {
   `);
 
   const dispatch = useDispatch();
-
   const [cookies] = useCookies();
 
   const tokenValidation = useCallback(() => {
@@ -48,10 +47,15 @@ const Layout = ({ children, isShow, isBack }) => {
   }, [cookies, dispatch]);
 
   useEffect(() => {
-    tokenValidation();
-    regionValidation();
-    sectorValidation();
-  }, [tokenValidation, regionValidation, sectorValidation]);
+    if (!cookies["token"]) {
+      alert(`로그아웃 되었습니다. 다시 로그인 해주세요.`);
+      navigate(`/login`);
+    } else {
+      tokenValidation();
+      regionValidation();
+      sectorValidation();
+    }
+  }, [cookies, tokenValidation, regionValidation, sectorValidation]);
 
   return (
     <>

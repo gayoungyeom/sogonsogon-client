@@ -6,6 +6,7 @@ import styled from "styled-components";
 
 import * as userActions from "../store/modules/user";
 import GlobalStyles from "../components/globalstyles";
+import logo from "../assets/img/logo.png";
 
 const SignupPage = () => {
   const dispatch = useDispatch();
@@ -64,7 +65,10 @@ const SignupPage = () => {
   return (
     <Container>
       <GlobalStyles />
-      <Title>소곤소곤</Title>
+      <Title>
+        {" "}
+        <Logo src={logo} alt="logo" />
+      </Title>
       <SubTitle>방문해주셔서 감사합니다!</SubTitle>
       <SubContent>
         간단한 정보를 입력하신 후 소곤소곤에서 소통해보세요 :)
@@ -127,10 +131,11 @@ const Container = styled.div`
   text-align: center;
 `;
 
-const Title = styled.div`
-  font-size: 37px;
-  font-weight: bold;
-  padding: 10px;
+const Title = styled.div``;
+
+const Logo = styled.img`
+  width: 195px;
+  height: 65px;
 `;
 
 const SubTitle = styled.div`

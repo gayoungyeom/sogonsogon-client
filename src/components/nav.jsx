@@ -15,11 +15,11 @@ const Nav = ({
   return (
     <Container>
       <List>
-        <Item current={curType == "first"} onClick={firstHandler}>
+        <Item current={curType === "first"} onClick={firstHandler}>
           <Category>{firstCategory}</Category>
           <CategoryDetail>{firstSubCategory}</CategoryDetail>
         </Item>
-        <Item current={curType == "second"} onClick={secondHandler}>
+        <Item current={curType === "second"} onClick={secondHandler}>
           <Category>{secondCategory}</Category>
           <CategoryDetail>{secondSubCategory}</CategoryDetail>
         </Item>

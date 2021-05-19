@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { navigate } from "gatsby";
 
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
@@ -18,7 +17,7 @@ import boardIcon from "../assets/svgs/board.svg";
 
 const IndexPage = ({ location }) => {
   const dispatch = useDispatch();
-  const regionBecode = useSelector(({ common }) => common.regionBcode);
+  const regionBcode = useSelector(({ common }) => common.regionBcode);
   const sectorNo = useSelector(({ common }) => common.sectorNo);
   const navNames = useSelector(({ user }) => user.navNames);
   const bestPosts = useSelector(({ board }) => board.bestPosts, shallowEqual);
@@ -27,40 +26,36 @@ const IndexPage = ({ location }) => {
   const [cookies] = useCookies(["token"]);
   const [curType, setCurType] = useState("first");
 
-  const isLogin = useCallback(() => {
-    if (cookies["token"]) {
-      regionClickHandler();
-      get(
-        `/user/getName?region_bcode=${regionBecode}&sector_no=${sectorNo}`,
-        data => {
-          dispatch(userActions.setNavName(data));
-        }
-      );
-    } else {
-      navigate(`/login`);
-    }
-  }, [cookies, regionBecode, sectorNo, dispatch, regionClickHandler]);
-
-  useEffect(() => {
-    isLogin();
-    //deps에 왜 이게 들어가는지 이해가 안되네..navNames넣으면 무한루프에 빠지고..
-  }, [regionBecode, sectorNo, isLogin]);
+  const getNavNames = useCallback(() => {
+    get(
+      `/user/getName?region_bcode=${regionBcode}&sector_no=${sectorNo}`,
+      data => {
+        dispatch(userActions.setNavName(data));
+      }
+    );
+  }, [regionBcode, sectorNo, dispatch]);
 
   const regionClickHandler = useCallback(() => {
     setCurType("first");
+    get(`/board/list/best?category=region&category_no=${regionBcode}`, data => {
+      dispatch(boardActions.setBestPosts(data.results));
+    });
     get(
-      `/board/list/best?category=region&category_no=${regionBecode}`,
-      data => {
-        dispatch(boardActions.setBestPosts(data.results));
-      }
-    );
-    get(
-      `/board/list/all?count=5&page=0&category=region&category_no=${regionBecode}`,
+      `/board/list/all?count=5&page=0&category=region&category_no=${regionBcode}`,
       data => {
         dispatch(boardActions.setAllPosts(data.results));
       }
     );
-  }, [regionBecode, dispatch]);
+  }, [regionBcode, dispatch]);
+
+  useEffect(() => {
+    if (cookies["token"]) {
+      if (regionBcode && sectorNo) {
+        getNavNames();
+        regionClickHandler();
+      }
+    }
+  }, [cookies, regionBcode, sectorNo, regionClickHandler, getNavNames]);
 
   const sectorClickHandler = useCallback(() => {
     setCurType("second");

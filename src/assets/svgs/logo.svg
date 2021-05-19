@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="212" height="73" viewBox="0 0 212 73">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #5c3ec2;
+        font-size: 55px;
+        font-family: NIXGONM-Vb, 'NIXGONFONTS V2\.0';
+      }
+
+      .cls-2 {
+        fill: #212529;
+      }
+
+      .cls-3 {
+        filter: url(#Header);
+      }
+    </style>
+    <filter id="Header" x="0" y="0" width="212" height="73" filterUnits="userSpaceOnUse">
+      <feOffset dy="5" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-color="#5c3ec2" flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g class="cls-3" transform="matrix(1, 0, 0, 1, 0, 0)">
+    <text id="Header-2" data-name="Header" class="cls-1" transform="translate(9 51)"><tspan x="0" y="0">소</tspan><tspan class="cls-2" y="0">곤소</tspan><tspan y="0">곤</tspan></text>
+  </g>
+</svg>

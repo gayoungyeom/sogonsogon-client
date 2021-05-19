@@ -7,7 +7,6 @@ const GlobalStyles = createGlobalStyle`
     @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap");
     body {
         font-family: "Noto Sans KR", sans-serif;
-        /* background: #f8f9fa; */
     }
     a{
         text-decoration: none;

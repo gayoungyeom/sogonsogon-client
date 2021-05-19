@@ -9,6 +9,7 @@ import * as userActions from "../store/modules/user";
 import GlobalStyles from "../components/globalstyles";
 import MyDropzone from "../components/dropzone";
 import cameraIcon from "../assets/svgs/camera.svg";
+import logo from "../assets/img/logo.png";
 
 const SignupFinPage = () => {
   const dispatch = useDispatch();
@@ -87,7 +88,10 @@ const SignupFinPage = () => {
   return (
     <Container>
       <GlobalStyles />
-      <Title>소곤소곤</Title>
+      <Title>
+        {" "}
+        <Logo src={logo} alt="logo" />
+      </Title>
       <SubTitle>
         추가정보 선택, 사업자 등록증 사진을 <br />
         추가하신 후 회원가입 요청을 해주세요! <br />
@@ -180,10 +184,11 @@ const Container = styled.div`
   text-align: center;
 `;
 
-const Title = styled.div`
-  font-size: 37px;
-  font-weight: bold;
-  padding: 10px;
+const Title = styled.div``;
+
+const Logo = styled.img`
+  width: 195px;
+  height: 65px;
 `;
 
 const SubTitle = styled.div`

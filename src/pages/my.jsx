@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import { useCookies } from "react-cookie";
 
 import { get, put } from "../utils/http";
 import * as userActions from "../store/modules/user";
@@ -25,6 +26,7 @@ const MyPage = ({ location }) => {
   const [totalCnt, setTotalCnt] = useState(0);
   const [isChangePw, setIsChangePw] = useState(false); //change pw
   const [curType, setCurType] = useState("first"); //nav control
+  const [cookies] = useCookies(["token"]);
 
   const getInfo = useCallback(() => {
     get(`/user`, data => {
@@ -44,9 +46,11 @@ const MyPage = ({ location }) => {
   );
 
   useEffect(() => {
-    getInfo();
-    getMyPosts(0);
-  }, [getInfo, getMyPosts]);
+    if (cookies["token"]) {
+      getInfo();
+      getMyPosts(0);
+    }
+  }, [cookies, getInfo, getMyPosts]);
 
   const onChangeInput = useCallback(
     e => {
