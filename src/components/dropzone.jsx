@@ -7,12 +7,14 @@ import * as userActions from "../store/modules/user";
 const MyDropzone = ({ text }) => {
   const dispatch = useDispatch();
   const [isUpload, setIsUpload] = useState(false);
+  const [fileName, setFileName] = useState("");
 
   const onDrop = useCallback(
     acceptedFiles => {
       const file = acceptedFiles[0];
       dispatch(userActions.setInput({ key: "img", value: file }));
       setIsUpload(true);
+      setFileName(file.name);
     },
     [dispatch]
   );
@@ -26,7 +28,7 @@ const MyDropzone = ({ text }) => {
   return (
     <div {...getRootProps()}>
       <input {...getInputProps()} />
-      <p>{isUpload ? "사진 등록 완료" : text}</p>
+      <p>{isUpload ? fileName : text}</p>
     </div>
   );
 };

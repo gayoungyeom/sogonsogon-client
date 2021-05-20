@@ -14,7 +14,8 @@ import "./layout.css";
 const Body = styled.div`
   margin: 0 auto;
   max-width: 960px; //테블릿 size
-  margin-top: ${props => props.isShow && "83px"};
+  margin-top: ${props => props.isShow && "80px"};
+  padding-bottom: 15px;
 `;
 
 const Layout = ({ children, isShow, isBack }) => {

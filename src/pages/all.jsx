@@ -40,7 +40,6 @@ const AllPage = ({ location }) => {
   const getPosts = useCallback(
     async (page, category) => {
       const categoryNo = category === "region" ? regionBcode : sectorNo;
-      console.log(category, categoryNo);
       get(
         `/board/list/all?count=${PER_PAGE}&page=${page}&category=${category}&category_no=${categoryNo}`,
         data => {
@@ -85,9 +84,9 @@ const AllPage = ({ location }) => {
       <Container>
         <Ads>광고</Ads>
         <Nav
-          firstCategory="내 지역"
+          firstCategory="내지역"
           firstSubCategory={`${navNames.r2_bname} ${navNames.r3_bname}`}
-          secondCategory="내 업종"
+          secondCategory="내업종"
           secondSubCategory={navNames.sector_name}
           firstHandler={regionClickHandler}
           secondHandler={sectorClickHandler}

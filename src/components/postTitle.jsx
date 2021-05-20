@@ -27,7 +27,7 @@ const Svg = styled.span`
 `;
 
 const More = styled(Link)`
-  font-size: 11px;
+  font-size: 12px;
   padding-right: 10px;
 `;
 

@@ -50,7 +50,7 @@ export default Header;
 
 const Container = styled.div`
   width: 100%;
-  height: 70px;
+  height: 80px;
   position: fixed;
   top: 0;
   left: 0;
@@ -65,14 +65,15 @@ const Wrap = styled.div`
   max-width: 960px;
   margin: 0 auto;
   background: #f8f9fa;
-  /* padding: 1.45rem 1.0875rem; */
   padding: 1rem;
+  padding-bottom: 0.2rem;
 `;
 
 const Back = styled.button`
   width: 30px;
   height: 30px;
   padding: 5px;
+  margin-bottom: 5px;
   border: none;
   cursor: pointer;
   background: url(${back}) center no-repeat;
@@ -88,7 +89,7 @@ const Logo = styled(Link)`
 
 const LogoImg = styled.img`
   width: 155px;
-  height: 50px;
+  height: 60px;
 `;
 
 const Span = styled.span`
@@ -101,7 +102,7 @@ const Search = styled(Link)``;
 
 const Mypage = styled(Link)`
   margin: 0 15px;
-  margin: 0 3vw;
+  margin: 0 4vw;
   font-weight: bold;
 `;
 

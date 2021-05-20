@@ -14,6 +14,7 @@ import Nav from "../components/nav";
 import PostTitle from "../components/postTitle";
 import crownIcon from "../assets/svgs/crown.svg";
 import boardIcon from "../assets/svgs/board.svg";
+import ads from "../assets/img/ads.png";
 
 const IndexPage = ({ location }) => {
   const dispatch = useDispatch();
@@ -22,7 +23,7 @@ const IndexPage = ({ location }) => {
   const navNames = useSelector(({ user }) => user.navNames);
   const bestPosts = useSelector(({ board }) => board.bestPosts, shallowEqual);
   const allPosts = useSelector(({ board }) => board.allPosts, shallowEqual);
-
+  // console.log(navNames);
   const [cookies] = useCookies(["token"]);
   const [curType, setCurType] = useState("first");
 
@@ -74,12 +75,14 @@ const IndexPage = ({ location }) => {
     <Layout>
       <SEO title="Home" />
       <Container>
-        <Ads>광고</Ads>
+        <Ads>
+          <img src={ads} style={{ width: "100%", height: "156px" }} alt="ads" />
+        </Ads>
 
         <Nav
-          firstCategory="내 지역"
+          firstCategory="내지역"
           firstSubCategory={`${navNames.r2_bname} ${navNames.r3_bname}`}
-          secondCategory="내 업종"
+          secondCategory="내업종"
           secondSubCategory={navNames.sector_name}
           firstHandler={regionClickHandler}
           secondHandler={sectorClickHandler}

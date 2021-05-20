@@ -7,6 +7,7 @@ import { useCookies } from "react-cookie";
 
 import { deleteData, get, postData, put } from "../utils/http";
 import * as boardActions from "../store/modules/board";
+import * as userActions from "../store/modules/user";
 import Layout from "../components/layout";
 import SEO from "../components/seo";
 import Comment from "../components/comment";
@@ -20,6 +21,9 @@ import dateformat from "../utils/dateformat";
 const DetailPage = ({ location }) => {
   const dispatch = useDispatch();
   const postNo = location.state.no;
+  const regionBcode = useSelector(({ common }) => common.regionBcode);
+  const sectorNo = useSelector(({ common }) => common.sectorNo);
+  const navNames = useSelector(({ user }) => user.navNames);
   const post = useSelector(({ board }) => board.post);
   const comment = useSelector(({ board }) => board.comment);
   const comments = useSelector(({ board }) => board.comments);
@@ -29,9 +33,19 @@ const DetailPage = ({ location }) => {
   const [isMine, setIsMine] = useState(false);
   const [likeCnt, setLikeCnt] = useState(0);
   const [totalComment, setTotalComment] = useState(0);
-  const [isLast, setIsLast] = useState(false);
   const [isLike, setIsLike] = useState(false);
+  const [isLast, setIsLast] = useState(false);
+  const [isNew, setIsNew] = useState(false);
   const [cookies] = useCookies(["token"]);
+
+  const getNavNames = useCallback(() => {
+    get(
+      `/user/getName?region_bcode=${regionBcode}&sector_no=${sectorNo}`,
+      data => {
+        dispatch(userActions.setNavName(data));
+      }
+    );
+  }, [regionBcode, sectorNo, dispatch]);
 
   const getPost = useCallback(() => {
     get(`/board?board_no=${postNo}`, data => {
@@ -48,19 +62,50 @@ const DetailPage = ({ location }) => {
       `/comment/list/all?count=${PER_PAGE}&page=${curPage}&board_no=${postNo}`,
       data => {
         setTotalComment(data.total_count);
-        curPage === 0
-          ? dispatch(boardActions.setComments(data.results))
-          : dispatch(boardActions.setNextComments(data.results));
+        if (curPage === 0) {
+          dispatch(boardActions.setComments(data.results));
+        } else {
+          dispatch(boardActions.setNextComments(data.results));
+        }
       }
     );
-  }, [PER_PAGE, curPage, postNo, dispatch]);
+  }, [PER_PAGE, curPage, postNo, setTotalComment, dispatch]);
+
+  const getOneComment = useCallback(() => {
+    const page =
+      totalComment % PER_PAGE === 0
+        ? setCurPage(curPage => curPage + 1)
+        : curPage;
+    page &&
+      get(
+        `/comment/list/all?count=${PER_PAGE}&page=${page}&board_no=${postNo}`,
+        data => {
+          setTotalComment(data.total_count);
+          const idx = data.total_count - curPage * PER_PAGE - 1;
+          dispatch(boardActions.setNextComments([data.results[idx]]));
+          setIsNew(false);
+        }
+      );
+  }, [
+    totalComment,
+    PER_PAGE,
+    postNo,
+    curPage,
+    setCurPage,
+    setTotalComment,
+    dispatch,
+    setIsNew
+  ]);
 
   useEffect(() => {
     if (cookies["token"]) {
-      getPost();
-      getComments();
+      if (regionBcode && sectorNo) {
+        getNavNames();
+        getPost();
+        getComments();
+      }
     }
-  }, [cookies, getPost, getComments]);
+  }, [cookies, getNavNames, getPost, getComments]);
 
   const onClickLike = useCallback(() => {
     if (isLike) {
@@ -77,13 +122,15 @@ const DetailPage = ({ location }) => {
   }, [postNo, isLike, likeCnt]);
 
   const paginationHandler = useCallback(() => {
-    setCurPage(curPage => curPage + 1);
-    const curCnt = parseInt(totalComment / 10);
-    if (curPage >= curCnt) {
-      alert(`마지막 댓글 입니다.`);
+    let curCnt = totalComment - curPage * 10;
+    if (curCnt > PER_PAGE) {
+      setCurPage(curPage => curPage + 1);
+      curCnt -= 10;
+    } else {
+      alert(`다음 페이지가 존재하지 않습니다.`);
       setIsLast(true);
     }
-  }, [curPage, totalComment]);
+  }, [curPage, totalComment, PER_PAGE, isNew, getComments, setIsLast]);
 
   const onChangeInput = useCallback(
     e => {
@@ -93,12 +140,28 @@ const DetailPage = ({ location }) => {
   );
 
   const createComment = useCallback(() => {
-    postData(`/comment`, { board_no: postNo, text: comment }, data => {
-      alert(`${data.message}`);
-      dispatch(boardActions.setComment(""));
-      getComments();
-    });
-  }, [postNo, comment, dispatch, getComments]);
+    if (comment === "") {
+      alert("댓글을 입력해 주세요.");
+    } else {
+      postData(`/comment`, { board_no: postNo, text: comment }, data => {
+        alert(`${data.message}`);
+        dispatch(boardActions.setComment(""));
+        if (curPage === 0) getComments();
+        else getOneComment();
+
+        setIsNew(true);
+        setIsLast(false);
+      });
+    }
+  }, [
+    postNo,
+    comment,
+    totalComment,
+    dispatch,
+    getComments,
+    getOneComment,
+    setIsLast
+  ]);
 
   const onKeyPress = e => {
     if (e.key === "Enter") createComment();
@@ -131,7 +194,12 @@ const DetailPage = ({ location }) => {
       <SEO title="PostDetail" />
       <Container>
         <Post>
-          <CurType>지역 | 서초구 방배동</CurType>
+          <CurType>
+            {post.category === "region" ? "지역" : "업종"} |{" "}
+            {post.category === "region"
+              ? navNames.r2_bname + " " + navNames.r3_bname
+              : navNames.sector_name}
+          </CurType>
           <PostTitle>{post.board_title}</PostTitle>
           <ABDContainer>
             <ABDWrap>
@@ -262,14 +330,14 @@ const EditDeleteWrap = styled.div`
 `;
 
 const Edit = styled(Link)`
-  font-size: 11px;
+  font-size: 13px;
   font-weight: bold;
   color: #5c3ec2;
   padding-right: 10px;
 `;
 
 const Delete = styled.button`
-  font-size: 11px;
+  font-size: 13px;
   font-weight: bold;
   color: #5c3ec2;
   border: none;
@@ -327,6 +395,7 @@ const LikeBtn = styled.button`
   justify-content: center;
   width: 65px;
   height: 26px;
+  font-weight: bold;
   color: ${props => (props.isLike ? "#5c3ec2" : "#fff")};
   background: ${props => (props.isLike ? "#fff" : "#5c3ec2")};
   /* background: url(${emptyHeartIcon}) left no-repeat; */

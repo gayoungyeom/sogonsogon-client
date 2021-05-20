@@ -18,7 +18,7 @@ const CreatePage = ({ location }) => {
   const sectorNo = useSelector(({ common }) => common.sectorNo);
   const navNames = useSelector(({ user }) => user.navNames);
   const data = useSelector(({ board }) => board.input).toJS();
-
+  console.log(data);
   const [cookies] = useCookies(["token"]);
   const [curType, setCurType] = useState("first");
 
@@ -65,14 +65,10 @@ const CreatePage = ({ location }) => {
     } else {
       postData(`/board`, { ...data }, data => {
         alert(`${data.message}`);
-        dispatch(
-          boardActions.setInput({
-            category: "",
-            category_no: "",
-            content: "",
-            title: ""
-          })
-        );
+        dispatch(boardActions.setInput({ key: "category", value: "" }));
+        dispatch(boardActions.setInput({ key: "category_no", value: "" }));
+        dispatch(boardActions.setInput({ key: "content", value: "" }));
+        dispatch(boardActions.setInput({ key: "title", value: "" }));
         navigate("/all");
       });
     }
@@ -83,9 +79,9 @@ const CreatePage = ({ location }) => {
       <SEO title="Create" />
       <Container>
         <Nav
-          firstCategory="내 지역"
+          firstCategory="내지역"
           firstSubCategory={`${navNames.r2_bname} ${navNames.r3_bname}`}
-          secondCategory="내 업종"
+          secondCategory="내업종"
           secondSubCategory={navNames.sector_name}
           firstHandler={regionClickHandler}
           secondHandler={sectorClickHandler}
@@ -152,7 +148,7 @@ const SaveBtn = styled.button`
   width: 90%;
   height: 45px;
   margin-top: 15px;
-  font-size: 11px;
+  font-size: 15px;
   color: #fff;
   background: #5c3ec2;
   border: #5c3ec2;

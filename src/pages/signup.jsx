@@ -71,13 +71,13 @@ const SignupPage = () => {
       </Title>
       <SubTitle>방문해주셔서 감사합니다!</SubTitle>
       <SubContent>
-        간단한 정보를 입력하신 후 소곤소곤에서 소통해보세요 :)
+        간단한 정보를 입력하신 후 소곤소곤에서 소통해 보세요 :)
       </SubContent>
       <InputContainer>
         <OneInput>
           <InputCaption>이메일</InputCaption>
           <Input
-            placeholder="이메일을 입력해주세요"
+            placeholder="이메일을 입력해 주세요"
             name="email"
             type="text"
             onChange={onChangeInput}
@@ -86,7 +86,7 @@ const SignupPage = () => {
         <OneInput>
           <InputCaption>비밀번호</InputCaption>
           <Input
-            placeholder="비밀번호를 입력해주세요. 예) 123456"
+            placeholder="숫자 6자리를 입력해 주세요. 예) 123456"
             name="password"
             type="password"
             maxLength="6"
@@ -96,7 +96,7 @@ const SignupPage = () => {
         <OneInput>
           <InputCaption>비밀번호 확인</InputCaption>
           <Input
-            placeholder="비밀번호를 한번 더 입력해주세요"
+            placeholder="비밀번호를 한번 더 입력해 주세요"
             name="password2"
             type="password"
             maxLength="6"
@@ -106,7 +106,7 @@ const SignupPage = () => {
         <OneInput>
           <InputCaption>닉네임</InputCaption>
           <Input
-            placeholder="사용하실 닉네임을 입력해주세요"
+            placeholder="사용하실 닉네임을 입력해 주세요"
             name="nickname"
             type="text"
             onChange={onChangeInput}
@@ -139,13 +139,13 @@ const Logo = styled.img`
 `;
 
 const SubTitle = styled.div`
-  font-size: 12px;
+  font-size: 14px;
   font-weight: bold;
   padding: 10px;
 `;
 
 const SubContent = styled.div`
-  font-size: 9px;
+  font-size: 12px;
   margin-bottom: 18px;
 `;
 

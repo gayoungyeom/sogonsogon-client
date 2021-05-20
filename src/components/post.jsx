@@ -72,7 +72,8 @@ const Container = styled.div`
   height: 80px;
   padding: 15px;
   background: #f8f9fa;
-  border: 2px solid #fff;
+  border-top: 2px solid #fff;
+  border-bottom: 2px solid #fff;
 `;
 
 const Title = styled.div`
@@ -88,7 +89,7 @@ const Rank = styled.span`
 const PostSub = styled.div`
   display: flex;
   justify-content: space-between;
-  font-size: 11px;
+  font-size: 12px;
   padding-top: 20px;
 `;
 
@@ -104,9 +105,11 @@ const CreateDate = styled.span``;
 
 const Right = styled.span``;
 
-const Span = styled.span``;
+const Span = styled.span`
+  font-size: 12px;
+`;
 
 const Emo = styled.span`
-  padding: 0 6px;
+  padding: 0 7px;
   /* color: #5c3ec2; */
 `;

@@ -77,7 +77,7 @@ const Item = styled.li`
 `;
 
 const Category = styled.div`
-  font-size: 10px;
+  font-size: 11px;
   font-weight: bold;
   position: absolute;
   top: 10px;

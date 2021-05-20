@@ -70,19 +70,27 @@ const SignupFinPage = () => {
   }, []);
 
   const onClickSignup = useCallback(() => {
-    const fd = new FormData();
-    fd.append("img", input.img, input.img.name);
-    fd.append("email", input.email);
-    fd.append("password", input.password);
-    fd.append("nickname", input.nickname);
-    fd.append("region_bcode", input.region_bcode);
-    fd.append("sector_no", input.sector_no);
+    if (((input.sector_no === "") === input.sector_no) === "default") {
+      alert(`업종을 선택해 주세요`);
+    } else if (input.region_bcode === "" || input.region_bcode === "default") {
+      alert(`지역을 선택해 주세요`);
+    } else if (input.img === "") {
+      alert(`사업자 등록증을 등록해 주세요`);
+    } else {
+      const fd = new FormData();
+      fd.append("img", input.img, input.img.name);
+      fd.append("email", input.email);
+      fd.append("password", input.password);
+      fd.append("nickname", input.nickname);
+      fd.append("region_bcode", input.region_bcode);
+      fd.append("sector_no", input.sector_no);
 
-    signup(`/user`, fd, data => {
-      alert(`${data.message}`);
-      dispatch(userActions.resetInput());
-      navigate("/login");
-    });
+      signup(`/user`, fd, data => {
+        alert(`${data.message}`);
+        dispatch(userActions.resetInput());
+        navigate("/login");
+      });
+    }
   }, [input, dispatch]);
 
   return (
@@ -106,7 +114,7 @@ const SignupFinPage = () => {
           <Inputcaption>업종 선택</Inputcaption>
           <Select name="sector_no" onChange={onChangeInput}>
             <Option value="default" defaultValue>
-              해당하는 업장을 선택해주세요
+              해당하는 업장을 선택해 주세요
             </Option>
             {sectorList &&
               sectorList.map(sector => (
@@ -168,7 +176,7 @@ const SignupFinPage = () => {
         <Button name="signup" onClick={onClickSignup}>
           회원가입 요청
         </Button>
-        <Button name="cancel" to="/login">
+        <Button name="cancel" onClick={() => navigate("/login")}>
           취소
         </Button>
       </InputContainer>
@@ -192,16 +200,16 @@ const Logo = styled.img`
 `;
 
 const SubTitle = styled.div`
-  font-size: 12px;
+  font-size: 13px;
   font-weight: bold;
   padding: 10px;
-  line-height: 15px;
+  line-height: 18px;
 `;
 
 const SubContent = styled.div`
-  font-size: 9px;
+  font-size: 12px;
   margin-bottom: 18px;
-  line-height: 12px;
+  line-height: 13px;
 `;
 
 const InputContainer = styled.div`
