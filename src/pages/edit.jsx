@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { useCookies } from "react-cookie";
 
-import { get, put } from "../utils/http";
+import { getData, putData } from "../utils/http";
 import * as userActions from "../store/modules/user";
 import * as boardActions from "../store/modules/board";
 import Layout from "../components/layout";
@@ -25,7 +25,7 @@ const EditPage = ({ location }) => {
   const [curType, setCurType] = useState("first");
 
   const getNavNames = useCallback(() => {
-    get(
+    getData(
       `/user/getName?region_bcode=${regionBecode}&sector_no=${sectorNo}`,
       data => {
         dispatch(userActions.setNavName(data));
@@ -48,7 +48,7 @@ const EditPage = ({ location }) => {
   }, [setCurType, dispatch, sectorNo]);
 
   const getPost = useCallback(() => {
-    get(`/board?board_no=${postNo}`, data => {
+    getData(`/board?board_no=${postNo}`, data => {
       dispatch(
         boardActions.setInput({ key: "title", value: data.board_title })
       );
@@ -61,11 +61,11 @@ const EditPage = ({ location }) => {
   }, [postNo, dispatch, regionClickHandler, sectorClickHandler]);
 
   useEffect(() => {
-    if (cookies["token"]) {
+    if (regionBecode && sectorNo) {
       getNavNames();
       getPost();
     }
-  }, [cookies, getNavNames, getPost]);
+  }, [regionBecode, sectorNo, getNavNames, getPost]);
 
   const onChangeInput = useCallback(
     e => {
@@ -77,7 +77,7 @@ const EditPage = ({ location }) => {
   );
 
   const onClickRegister = useCallback(() => {
-    put(
+    putData(
       `/board`,
       {
         board_no: postNo,

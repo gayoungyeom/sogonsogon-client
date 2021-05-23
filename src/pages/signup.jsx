@@ -116,7 +116,7 @@ const SignupPage = () => {
           다음
         </Button>
         <Button name="cancel" onClick={() => navigate("/login")}>
-          뒤로
+          취소
         </Button>
       </InputContainer>
     </Container>

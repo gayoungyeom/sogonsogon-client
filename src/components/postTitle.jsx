@@ -40,7 +40,7 @@ const PostTitle = ({ title, svg, isMore }) => {
           <object type="image/svg+xml" aria-label="title" data={svg} />
         </Svg>
       </Title>
-      {isMore && <More to="all">더보기 &gt;</More>}
+      {isMore && <More to="/all/region">더보기 &gt;</More>}
     </PostTitleWrap>
   );
 };

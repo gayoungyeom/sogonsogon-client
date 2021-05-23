@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { useCookies } from "react-cookie";
 
-import { get } from "../utils/http";
+import { getData } from "../utils/http";
 import * as boardActions from "../store/modules/board";
 import Layout from "../components/layout";
 import SEO from "../components/seo";
@@ -16,6 +16,8 @@ import back from "../assets/svgs/back.svg";
 
 const SearchPage = ({ location }) => {
   const dispatch = useDispatch();
+  const regionBcode = useSelector(({ common }) => common.regionBcode);
+  const sectorNo = useSelector(({ common }) => common.sectorNo);
   const allPosts = useSelector(({ board }) => board.allPosts);
 
   const PER_PAGE = 10;
@@ -31,8 +33,8 @@ const SearchPage = ({ location }) => {
 
   const getResults = useCallback(
     page => {
-      get(
-        `/board/list/search?search=${input}&page=${page}&count=${PER_PAGE}`,
+      getData(
+        `/board/list/search?search=${input}&page=${page}&count=${PER_PAGE}&region_bcode=${regionBcode}&sector_no=${sectorNo}`,
         data => {
           dispatch(boardActions.setAllPosts(data.results));
           setTotalCnt(data.total_count);
@@ -40,11 +42,11 @@ const SearchPage = ({ location }) => {
         }
       );
     },
-    [input, PER_PAGE, dispatch]
+    [input, PER_PAGE, dispatch, regionBcode, sectorNo]
   );
 
   const onClickSearch = useCallback(() => {
-    if (cookies["token"]) {
+    if (input !== "") {
       getResults(0);
     }
   }, [cookies, getResults]);

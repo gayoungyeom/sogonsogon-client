@@ -1,21 +1,23 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { navigate } from "gatsby";
 
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { useCookies } from "react-cookie";
 
-import { get } from "../utils/http";
-import * as boardActions from "../store/modules/board";
-import * as userActions from "../store/modules/user";
-import Layout from "../components/layout";
-import SEO from "../components/seo";
-import Post from "../components/post";
-import Nav from "../components/nav";
-import Pagination from "../components/pagination";
-import PostTitle from "../components/postTitle";
-import boardIcon from "../assets/svgs/board.svg";
+import { getData } from "../../utils/http";
+import * as boardActions from "../../store/modules/board";
+import * as userActions from "../../store/modules/user";
+import Layout from "../../components/layout";
+import SEO from "../../components/seo";
+import Post from "../../components/post";
+import Nav from "../../components/nav";
+import Pagination from "../../components/pagination";
+import PostTitle from "../../components/postTitle";
+import boardIcon from "../../assets/svgs/board.svg";
+import ads from "../../assets/img/ads.png";
 
-const AllPage = ({ location }) => {
+const AllSectorPage = ({ location }) => {
   const dispatch = useDispatch();
   const regionBcode = useSelector(({ common }) => common.regionBcode);
   const sectorNo = useSelector(({ common }) => common.sectorNo);
@@ -25,11 +27,10 @@ const AllPage = ({ location }) => {
   const PER_PAGE = 10;
   const [curPage, setCurPage] = useState(1);
   const [totalCnt, setTotalCnt] = useState(0);
-  const [curType, setCurType] = useState("first");
   const [cookies] = useCookies(["token"]);
 
   const getNavNames = useCallback(() => {
-    get(
+    getData(
       `/user/getName?region_bcode=${regionBcode}&sector_no=${sectorNo}`,
       data => {
         dispatch(userActions.setNavName(data));
@@ -40,7 +41,7 @@ const AllPage = ({ location }) => {
   const getPosts = useCallback(
     async (page, category) => {
       const categoryNo = category === "region" ? regionBcode : sectorNo;
-      get(
+      getData(
         `/board/list/all?count=${PER_PAGE}&page=${page}&category=${category}&category_no=${categoryNo}`,
         data => {
           dispatch(boardActions.setAllPosts(data.results));
@@ -52,45 +53,36 @@ const AllPage = ({ location }) => {
   );
 
   useEffect(() => {
-    if (cookies["token"]) {
-      if (regionBcode && sectorNo) {
-        getNavNames();
-        getPosts(0, "region");
-      }
+    if (regionBcode && sectorNo) {
+      getNavNames();
+      getPosts(0, "sector");
     }
-  }, [cookies, getNavNames, getPosts]);
+  }, [regionBcode, sectorNo, getNavNames, getPosts]);
 
   const paginationHandler = current => {
     setCurPage(current);
-    if (curType === "first") getPosts(current - 1, "region");
-    else getPosts(current - 1, "sector");
+    getPosts(current - 1, "sector");
   };
 
-  const regionClickHandler = useCallback(() => {
-    setCurType("first");
-    setCurPage(1);
-    getPosts(0, "region");
-  }, [getPosts]);
-
-  const sectorClickHandler = useCallback(() => {
-    setCurType("second");
-    setCurPage(1);
-    getPosts(0, "sector");
-  }, [getPosts]);
+  const regionClickHandler = () => {
+    navigate("/all/region");
+  };
 
   return (
     <Layout isBack={true}>
-      <SEO title="All" />
+      <SEO title="All-Sector" />
       <Container>
-        <Ads>광고</Ads>
+        <Ads>
+          {" "}
+          <img src={ads} style={{ width: "100%", height: "156px" }} alt="ads" />
+        </Ads>
         <Nav
           firstCategory="내지역"
           firstSubCategory={`${navNames.r2_bname} ${navNames.r3_bname}`}
           secondCategory="내업종"
           secondSubCategory={navNames.sector_name}
           firstHandler={regionClickHandler}
-          secondHandler={sectorClickHandler}
-          curType={curType}
+          curType={"second"}
         />
 
         <ListContainer>
@@ -122,7 +114,7 @@ const AllPage = ({ location }) => {
   );
 };
 
-export default AllPage;
+export default AllSectorPage;
 
 const Container = styled.div`
   margin-top: 0;

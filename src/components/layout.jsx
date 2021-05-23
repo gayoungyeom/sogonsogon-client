@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { useStaticQuery, graphql, navigate } from "gatsby";
+import React, { useCallback, useEffect } from "react";
+import { navigate } from "gatsby";
 
 import { useDispatch } from "react-redux";
 import { useCookies } from "react-cookie";
@@ -19,16 +19,6 @@ const Body = styled.div`
 `;
 
 const Layout = ({ children, isShow, isBack }) => {
-  const data = useStaticQuery(graphql`
-    query SiteTitleQuery {
-      site {
-        siteMetadata {
-          title
-        }
-      }
-    }
-  `);
-
   const dispatch = useDispatch();
   const [cookies] = useCookies();
 

@@ -12,9 +12,10 @@ import logo from "../assets/img/logo.png";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
-  const [tokenCookie, setTokenCookie] = useCookies(["token"]);
-  const [sectorCookie, setSectorCookie] = useCookies(["sector"]);
-  const [regionCookie, setRegionCookie] = useCookies(["region"]);
+
+  const [tokenCookie, setTokenCookie] = useCookies(["token"]); // eslint-disable-line no-unused-vars
+  const [sectorCookie, setSectorCookie] = useCookies(["sector"]); // eslint-disable-line no-unused-vars
+  const [regionCookie, setRegionCookie] = useCookies(["region"]); // eslint-disable-line no-unused-vars
 
   const setToken = useCallback(
     token => dispatch(commonActions.setToken(token)),

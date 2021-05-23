@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { useCookies } from "react-cookie";
 
-import { deleteData, get, postData, put } from "../utils/http";
+import { deleteData, getData, postData, putData } from "../utils/http";
 import * as boardActions from "../store/modules/board";
 import * as userActions from "../store/modules/user";
 import Layout from "../components/layout";
@@ -35,11 +35,10 @@ const DetailPage = ({ location }) => {
   const [totalComment, setTotalComment] = useState(0);
   const [isLike, setIsLike] = useState(false);
   const [isLast, setIsLast] = useState(false);
-  const [isNew, setIsNew] = useState(false);
   const [cookies] = useCookies(["token"]);
 
   const getNavNames = useCallback(() => {
-    get(
+    getData(
       `/user/getName?region_bcode=${regionBcode}&sector_no=${sectorNo}`,
       data => {
         dispatch(userActions.setNavName(data));
@@ -48,7 +47,7 @@ const DetailPage = ({ location }) => {
   }, [regionBcode, sectorNo, dispatch]);
 
   const getPost = useCallback(() => {
-    get(`/board?board_no=${postNo}`, data => {
+    getData(`/board?board_no=${postNo}`, data => {
       dispatch(boardActions.setPost(data));
       setIsMine(data.is_mine);
       setIsLike(data.is_like);
@@ -58,7 +57,7 @@ const DetailPage = ({ location }) => {
   }, [postNo, dispatch]);
 
   const getComments = useCallback(() => {
-    get(
+    getData(
       `/comment/list/all?count=${PER_PAGE}&page=${curPage}&board_no=${postNo}`,
       data => {
         setTotalComment(data.total_count);
@@ -77,13 +76,12 @@ const DetailPage = ({ location }) => {
         ? setCurPage(curPage => curPage + 1)
         : curPage;
     page &&
-      get(
+      getData(
         `/comment/list/all?count=${PER_PAGE}&page=${page}&board_no=${postNo}`,
         data => {
           setTotalComment(data.total_count);
           const idx = data.total_count - curPage * PER_PAGE - 1;
           dispatch(boardActions.setNextComments([data.results[idx]]));
-          setIsNew(false);
         }
       );
   }, [
@@ -93,28 +91,25 @@ const DetailPage = ({ location }) => {
     curPage,
     setCurPage,
     setTotalComment,
-    dispatch,
-    setIsNew
+    dispatch
   ]);
 
   useEffect(() => {
-    if (cookies["token"]) {
-      if (regionBcode && sectorNo) {
-        getNavNames();
-        getPost();
-        getComments();
-      }
+    if (regionBcode && sectorNo) {
+      getNavNames();
+      getPost();
+      getComments();
     }
-  }, [cookies, getNavNames, getPost, getComments]);
+  }, [regionBcode, sectorNo, getNavNames, getPost, getComments]);
 
   const onClickLike = useCallback(() => {
     if (isLike) {
-      put(`/board/like/up?board_no=${postNo}`, {}, data => {
+      putData(`/board/like/up?board_no=${postNo}`, {}, data => {
         setIsLike(!isLike);
         setLikeCnt(likeCnt + 1);
       });
     } else {
-      put(`/board/like/down?board_no=${postNo}`, {}, data => {
+      putData(`/board/like/down?board_no=${postNo}`, {}, data => {
         setIsLike(!isLike);
         setLikeCnt(likeCnt - 1);
       });
@@ -130,7 +125,7 @@ const DetailPage = ({ location }) => {
       alert(`다음 페이지가 존재하지 않습니다.`);
       setIsLast(true);
     }
-  }, [curPage, totalComment, PER_PAGE, isNew, getComments, setIsLast]);
+  }, [curPage, totalComment, PER_PAGE, setIsLast]);
 
   const onChangeInput = useCallback(
     e => {
@@ -148,15 +143,13 @@ const DetailPage = ({ location }) => {
         dispatch(boardActions.setComment(""));
         if (curPage === 0) getComments();
         else getOneComment();
-
-        setIsNew(true);
         setIsLast(false);
       });
     }
   }, [
     postNo,
     comment,
-    totalComment,
+    curPage,
     dispatch,
     getComments,
     getOneComment,
@@ -203,7 +196,7 @@ const DetailPage = ({ location }) => {
           <PostTitle>{post.board_title}</PostTitle>
           <ABDContainer>
             <ABDWrap>
-              <Author>익명의 사나이</Author>
+              <Author>{post.nickname}</Author>
               <Bar>|</Bar>
               <Date>{dateformat(post.create_datetime)}</Date>
             </ABDWrap>
@@ -270,11 +263,13 @@ const DetailPage = ({ location }) => {
               />
             ))}
         </CommentContainer>
-        <MoreWrap>
-          <More isLast={isLast} onClick={paginationHandler} disabled={isLast}>
-            더보기
-          </More>
-        </MoreWrap>
+        {totalComment > PER_PAGE && (
+          <MoreWrap>
+            <More isLast={isLast} onClick={paginationHandler} disabled={isLast}>
+              더보기
+            </More>
+          </MoreWrap>
+        )}
       </Container>
       <InputContainer>
         <InputWrap>
@@ -421,8 +416,7 @@ const MoreWrap = styled.div`
 `;
 
 const More = styled.button`
-  /* width: 290px; */
-  width: 90%;
+  width: 100%;
   height: 45px;
   border: 2px solid #dededf;
   border-radius: 4px;

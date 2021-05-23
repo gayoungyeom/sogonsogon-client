@@ -4,7 +4,7 @@ import { navigate } from "gatsby";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
-import { get, signup } from "../utils/http";
+import { getData, signup } from "../utils/http";
 import * as userActions from "../store/modules/user";
 import GlobalStyles from "../components/globalstyles";
 import MyDropzone from "../components/dropzone";
@@ -22,27 +22,28 @@ const SignupFinPage = () => {
 
   const [isFirstSelected, setIsFirstSelected] = useState(false);
   const [isSecondSelected, setIsSecondSelected] = useState(false);
+  const [isSignup, setIsSignup] = useState(false);
 
   const getSectorList = useCallback(() => {
-    get(`/user/selectSectors`, data => {
+    getData(`/user/selectSectors`, data => {
       setSectorList(data.results);
     });
   }, []);
 
   const getRegionList1 = useCallback(() => {
-    get(`/user/selectregion1`, data => {
+    getData(`/user/selectregion1`, data => {
       setRegionList1(data.result);
     });
   }, []);
 
   useEffect(() => {
-    if (input.email === "") {
+    if (input.email === "" && !isSignup) {
       navigate("/signup");
     } else {
       getSectorList();
       getRegionList1();
     }
-  }, [input.email, getSectorList, getRegionList1]);
+  }, [input.email, isSignup, getSectorList, getRegionList1]);
 
   const onChangeInput = useCallback(
     e => {
@@ -55,7 +56,7 @@ const SignupFinPage = () => {
 
   const onSelectFirstRegion = useCallback(e => {
     const region1No = e.target.value;
-    get(`/user/selectregion2?region_1_no=${region1No}`, data => {
+    getData(`/user/selectregion2?region_1_no=${region1No}`, data => {
       setRegionList2(data.results);
       setIsFirstSelected(true);
     });
@@ -63,7 +64,7 @@ const SignupFinPage = () => {
 
   const onSelectSecondRegion = useCallback(e => {
     const region2No = e.target.value;
-    get(`/user/selectregion3?region_2_no=${region2No}`, data => {
+    getData(`/user/selectregion3?region_2_no=${region2No}`, data => {
       setRegionList3(data.results);
       setIsSecondSelected(true);
     });
@@ -86,6 +87,7 @@ const SignupFinPage = () => {
       fd.append("sector_no", input.sector_no);
 
       signup(`/user`, fd, data => {
+        setIsSignup(true);
         alert(`${data.message}`);
         dispatch(userActions.resetInput());
         navigate("/login");
@@ -133,7 +135,9 @@ const SignupFinPage = () => {
             {regionList1 &&
               regionList1.map(region => (
                 <Option key={region.no} value={region.no}>
-                  {region.bname}
+                  {isFirstSelected && region.bname.length > 3
+                    ? `${region.bname.slice(0, 3)}...`
+                    : region.bname}
                 </Option>
               ))}
           </SelectRegion>
@@ -176,8 +180,8 @@ const SignupFinPage = () => {
         <Button name="signup" onClick={onClickSignup}>
           회원가입 요청
         </Button>
-        <Button name="cancel" onClick={() => navigate("/login")}>
-          취소
+        <Button name="cancel" onClick={() => navigate("/signup")}>
+          뒤로
         </Button>
       </InputContainer>
     </Container>

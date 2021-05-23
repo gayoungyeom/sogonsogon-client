@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { useCookies } from "react-cookie";
 
-import { get, postData } from "../utils/http";
+import { getData, postData } from "../utils/http";
 import * as boardActions from "../store/modules/board";
 import * as userActions from "../store/modules/user";
 import Layout from "../components/layout";
@@ -18,12 +18,12 @@ const CreatePage = ({ location }) => {
   const sectorNo = useSelector(({ common }) => common.sectorNo);
   const navNames = useSelector(({ user }) => user.navNames);
   const data = useSelector(({ board }) => board.input).toJS();
-  console.log(data);
+  console.log(data.content);
   const [cookies] = useCookies(["token"]);
   const [curType, setCurType] = useState("first");
 
   const getNavNames = useCallback(() => {
-    get(
+    getData(
       `/user/getName?region_bcode=${regionBcode}&sector_no=${sectorNo}`,
       data => {
         dispatch(userActions.setNavName(data));
@@ -44,11 +44,11 @@ const CreatePage = ({ location }) => {
   }, [setCurType, dispatch, sectorNo]);
 
   useEffect(() => {
-    if (cookies["token"]) {
+    if (regionBcode && sectorNo) {
       getNavNames();
       regionClickHandler();
     }
-  }, [cookies, getNavNames, regionClickHandler]);
+  }, [regionBcode, sectorNo, getNavNames, regionClickHandler]);
 
   const onChangeInput = useCallback(
     e => {
@@ -69,7 +69,7 @@ const CreatePage = ({ location }) => {
         dispatch(boardActions.setInput({ key: "category_no", value: "" }));
         dispatch(boardActions.setInput({ key: "content", value: "" }));
         dispatch(boardActions.setInput({ key: "title", value: "" }));
-        navigate("/all");
+        navigate("/all/region");
       });
     }
   }, [data, dispatch]);
@@ -135,6 +135,7 @@ const Content = styled.textarea`
   padding: 13px;
   font-size: 13px;
   resize: none;
+  line-height: 18px;
 `;
 
 const BtnWrap = styled.div`
@@ -144,8 +145,7 @@ const BtnWrap = styled.div`
 `;
 
 const SaveBtn = styled.button`
-  /* width: 290px; */
-  width: 90%;
+  width: 99%;
   height: 45px;
   margin-top: 15px;
   font-size: 15px;

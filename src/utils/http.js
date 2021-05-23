@@ -43,7 +43,7 @@ const isError = e => {
   }
 };
 
-export const get = async (path, callback) => {
+export const getData = async (path, callback) => {
   const headers = checkAuth();
   try {
     const res = await axios.get(`${url()}${path}`, {
@@ -67,7 +67,7 @@ export const postData = async (path, data, callback) => {
   }
 };
 
-export const put = async (path, data, callback) => {
+export const putData = async (path, data, callback) => {
   const headers = checkAuth();
   try {
     const res = await axios.put(`${url()}${path}`, data, {

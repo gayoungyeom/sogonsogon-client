@@ -1,10 +1,11 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
+import { navigate } from "gatsby";
 
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { useCookies } from "react-cookie";
 
-import { get } from "../utils/http";
+import { getData } from "../utils/http";
 import * as boardActions from "../store/modules/board";
 import * as userActions from "../store/modules/user";
 import Layout from "../components/layout";
@@ -21,14 +22,13 @@ const IndexPage = ({ location }) => {
   const regionBcode = useSelector(({ common }) => common.regionBcode);
   const sectorNo = useSelector(({ common }) => common.sectorNo);
   const navNames = useSelector(({ user }) => user.navNames);
-  const bestPosts = useSelector(({ board }) => board.bestPosts, shallowEqual);
-  const allPosts = useSelector(({ board }) => board.allPosts, shallowEqual);
-  // console.log(navNames);
+  const bestPosts = useSelector(({ board }) => board.bestPosts);
+  const allPosts = useSelector(({ board }) => board.allPosts);
+
   const [cookies] = useCookies(["token"]);
-  const [curType, setCurType] = useState("first");
 
   const getNavNames = useCallback(() => {
-    get(
+    getData(
       `/user/getName?region_bcode=${regionBcode}&sector_no=${sectorNo}`,
       data => {
         dispatch(userActions.setNavName(data));
@@ -36,12 +36,14 @@ const IndexPage = ({ location }) => {
     );
   }, [regionBcode, sectorNo, dispatch]);
 
-  const regionClickHandler = useCallback(() => {
-    setCurType("first");
-    get(`/board/list/best?category=region&category_no=${regionBcode}`, data => {
-      dispatch(boardActions.setBestPosts(data.results));
-    });
-    get(
+  const getPosts = useCallback(() => {
+    getData(
+      `/board/list/best?category=region&category_no=${regionBcode}`,
+      data => {
+        dispatch(boardActions.setBestPosts(data.results));
+      }
+    );
+    getData(
       `/board/list/all?count=5&page=0&category=region&category_no=${regionBcode}`,
       data => {
         dispatch(boardActions.setAllPosts(data.results));
@@ -50,30 +52,19 @@ const IndexPage = ({ location }) => {
   }, [regionBcode, dispatch]);
 
   useEffect(() => {
-    if (cookies["token"]) {
-      if (regionBcode && sectorNo) {
-        getNavNames();
-        regionClickHandler();
-      }
+    if (regionBcode && sectorNo) {
+      getNavNames();
+      getPosts();
     }
-  }, [cookies, regionBcode, sectorNo, regionClickHandler, getNavNames]);
+  }, [regionBcode, sectorNo, getPosts, getNavNames]);
 
-  const sectorClickHandler = useCallback(() => {
-    setCurType("second");
-    get(`/board/list/best?category=sector&category_no=${sectorNo}`, data => {
-      dispatch(boardActions.setBestPosts(data.results));
-    });
-    get(
-      `/board/list/all?count=5&page=0&category=sector&category_no=${sectorNo}`,
-      data => {
-        dispatch(boardActions.setAllPosts(data.results));
-      }
-    );
-  }, [sectorNo, dispatch]);
+  const sectorClickHandler = () => {
+    navigate("/sector");
+  };
 
   return (
     <Layout>
-      <SEO title="Home" />
+      <SEO title="Home-Region" />
       <Container>
         <Ads>
           <img src={ads} style={{ width: "100%", height: "156px" }} alt="ads" />
@@ -84,12 +75,11 @@ const IndexPage = ({ location }) => {
           firstSubCategory={`${navNames.r2_bname} ${navNames.r3_bname}`}
           secondCategory="내업종"
           secondSubCategory={navNames.sector_name}
-          firstHandler={regionClickHandler}
           secondHandler={sectorClickHandler}
-          curType={curType}
+          curType={"first"}
         />
 
-        <ListContainer>
+        <ListContainer title="best">
           <PostTitle title="베스트 게시글" svg={crownIcon} />
           <PostList>
             {bestPosts &&
@@ -107,7 +97,7 @@ const IndexPage = ({ location }) => {
               ))}
           </PostList>
         </ListContainer>
-        <ListContainer>
+        <ListContainer title="all">
           <PostTitle title="전체 게시글" svg={boardIcon} isMore={true} />
           <PostList>
             {allPosts &&
@@ -119,7 +109,7 @@ const IndexPage = ({ location }) => {
                   author={post.nickname}
                   createDate={post.create_datetime}
                   like={post.likes}
-                  comment={post.comment}
+                  comment={post.comments}
                   rank={idx + 1}
                 />
               ))}
@@ -143,7 +133,8 @@ const Ads = styled.div`
 `;
 
 const ListContainer = styled.div`
-  /* height: 442px; */
+  border-top: ${props => props.title === "all" && "2px solid#dfe6e9"};
+  margin-top: ${props => props.title === "all" && "2px"};
 `;
 
 const PostList = styled.div``;

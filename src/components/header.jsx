@@ -28,7 +28,8 @@ const Header = ({ siteTitle, isBack }) => {
               fill={`#212529`}
             />
           </Search>
-          <Mypage to="/my">MY</Mypage>
+          <Mypage to="/my/info">MY</Mypage>
+          <Logout to="/logout">LOGOUT</Logout>
           <Create to="/create">글쓰기</Create>
         </Span>
       </Wrap>
@@ -65,7 +66,8 @@ const Wrap = styled.div`
   max-width: 960px;
   margin: 0 auto;
   background: #f8f9fa;
-  padding: 1rem;
+  padding: 0 0.5rem;
+  padding-top: 1rem;
   padding-bottom: 0.2rem;
 `;
 
@@ -90,6 +92,10 @@ const Logo = styled(Link)`
 const LogoImg = styled.img`
   width: 155px;
   height: 60px;
+  @media screen and (max-width: 960px) {
+    width: 135px;
+    height: 52px;
+  }
 `;
 
 const Span = styled.span`
@@ -98,12 +104,27 @@ const Span = styled.span`
   font-size: 12px;
 `;
 
-const Search = styled(Link)``;
+const Search = styled(Link)`
+  margin: 0 10px;
+  @media screen and (min-width: 960px) {
+    margin: 0 20px;
+  }
+`;
 
 const Mypage = styled(Link)`
-  margin: 0 15px;
-  margin: 0 4vw;
+  margin: 0 10px;
   font-weight: bold;
+  @media screen and (min-width: 960px) {
+    margin: 0 20px;
+  }
+`;
+
+const Logout = styled(Link)`
+  margin: 0 10px;
+  font-weight: bold;
+  @media screen and (min-width: 960px) {
+    margin: 0 20px;
+  }
 `;
 
 const Create = styled(Link)`
@@ -115,4 +136,8 @@ const Create = styled(Link)`
   color: #fff;
   background: #5c3ec2;
   border-radius: 3px;
+  margin-left: 10px;
+  @media screen and (min-width: 960px) {
+    margin-left: 20px;
+  }
 `;

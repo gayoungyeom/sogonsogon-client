@@ -14,7 +14,7 @@ const Post = ({ no, title, author, createDate, like, comment, rank }) => {
       <Container>
         <Title>
           {rank ? <Rank>{rank}</Rank> : null}
-          {title}
+          {title.length > 26 ? `${title.slice(0, 26)}...` : title}
         </Title>
         <PostSub>
           <Left>
