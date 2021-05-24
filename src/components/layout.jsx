@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from "react";
 import { navigate } from "gatsby";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useCookies } from "react-cookie";
 import PropTypes from "prop-types";
 import styled from "styled-components";
@@ -9,6 +9,7 @@ import styled from "styled-components";
 import * as commonActions from "../store/modules/common";
 import GlobalStyles from "./globalstyles";
 import Header from "./header";
+import Loading from "./loading";
 import "./layout.css";
 
 const Body = styled.div`
@@ -20,6 +21,8 @@ const Body = styled.div`
 
 const Layout = ({ children, isShow, isBack }) => {
   const dispatch = useDispatch();
+  const isLoading = useSelector(({ common }) => common.isLoading);
+
   const [cookies] = useCookies();
 
   const tokenValidation = useCallback(() => {
@@ -52,8 +55,23 @@ const Layout = ({ children, isShow, isBack }) => {
     <>
       <GlobalStyles />
       <Body isShow={isShow}>
-        {isShow && <Header isBack={isBack} />}
-        <main>{children}</main>
+        {isLoading ? (
+          <div
+            style={{
+              height: "500px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center"
+            }}
+          >
+            <Loading type="spin" color="#5c3ec2" height="150px" width="150px" />
+          </div>
+        ) : (
+          <>
+            {isShow && <Header isBack={isBack} />}
+            <main>{children}</main>
+          </>
+        )}
       </Body>
     </>
   );

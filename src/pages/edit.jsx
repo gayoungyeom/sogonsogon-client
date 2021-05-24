@@ -3,7 +3,6 @@ import { navigate } from "gatsby";
 
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { useCookies } from "react-cookie";
 
 import { getData, putData } from "../utils/http";
 import * as userActions from "../store/modules/user";
@@ -21,7 +20,6 @@ const EditPage = ({ location }) => {
   const navNames = useSelector(({ user }) => user.navNames);
   const data = useSelector(({ board }) => board.input).toJS();
 
-  const [cookies] = useCookies(["token"]);
   const [curType, setCurType] = useState("first");
 
   const getNavNames = useCallback(() => {

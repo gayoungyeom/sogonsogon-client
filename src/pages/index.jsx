@@ -3,7 +3,6 @@ import { navigate } from "gatsby";
 
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { useCookies } from "react-cookie";
 
 import { getData } from "../utils/http";
 import * as boardActions from "../store/modules/board";
@@ -24,8 +23,6 @@ const IndexPage = ({ location }) => {
   const navNames = useSelector(({ user }) => user.navNames);
   const bestPosts = useSelector(({ board }) => board.bestPosts);
   const allPosts = useSelector(({ board }) => board.allPosts);
-
-  const [cookies] = useCookies(["token"]);
 
   const getNavNames = useCallback(() => {
     getData(

@@ -3,7 +3,6 @@ import { navigate } from "gatsby";
 
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { useCookies } from "react-cookie";
 
 import { getData, putData } from "../../utils/http";
 import * as userActions from "../../store/modules/user";
@@ -20,7 +19,6 @@ const MyInfoPage = ({ location }) => {
   const password2 = input.password2 || "";
 
   const [isChangePw, setIsChangePw] = useState(false); //change pw
-  const [cookies] = useCookies(["token"]);
 
   const getInfo = useCallback(() => {
     getData(`/user`, data => {

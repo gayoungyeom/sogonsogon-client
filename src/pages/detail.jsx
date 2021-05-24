@@ -3,7 +3,6 @@ import { Link, navigate } from "gatsby";
 
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { useCookies } from "react-cookie";
 
 import { deleteData, getData, postData, putData } from "../utils/http";
 import * as boardActions from "../store/modules/board";
@@ -35,7 +34,6 @@ const DetailPage = ({ location }) => {
   const [totalComment, setTotalComment] = useState(0);
   const [isLike, setIsLike] = useState(false);
   const [isLast, setIsLast] = useState(false);
-  const [cookies] = useCookies(["token"]);
 
   const getNavNames = useCallback(() => {
     getData(

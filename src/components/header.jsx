@@ -67,7 +67,7 @@ const Wrap = styled.div`
   margin: 0 auto;
   background: #f8f9fa;
   padding: 0 0.5rem;
-  padding-top: 1rem;
+  padding-top: 1.3rem;
   padding-bottom: 0.2rem;
 `;
 
@@ -91,10 +91,10 @@ const Logo = styled(Link)`
 
 const LogoImg = styled.img`
   width: 155px;
-  height: 60px;
+  height: 52px;
   @media screen and (max-width: 960px) {
     width: 135px;
-    height: 52px;
+    height: 45px;
   }
 `;
 

@@ -3,7 +3,6 @@ import { navigate } from "gatsby";
 
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { useCookies } from "react-cookie";
 
 import { getData } from "../utils/http";
 import * as boardActions from "../store/modules/board";
@@ -25,7 +24,6 @@ const SearchPage = ({ location }) => {
   const [totalCnt, setTotalCnt] = useState(0);
   const [input, setInput] = useState("");
   const [isSearched, setIsSearched] = useState(false);
-  const [cookies] = useCookies(["token"]);
 
   const onChangeInput = useCallback(e => {
     setInput(e.target.value);
@@ -46,10 +44,12 @@ const SearchPage = ({ location }) => {
   );
 
   const onClickSearch = useCallback(() => {
-    if (input !== "") {
+    if (input === "") {
+      alert("검색할 제목을 입력해 주세요");
+    } else {
       getResults(0);
     }
-  }, [cookies, getResults]);
+  }, [input, getResults]);
 
   const onKeyPress = e => {
     e.key === "Enter" && onClickSearch();

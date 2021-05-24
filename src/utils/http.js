@@ -1,6 +1,8 @@
 import axios from "axios";
-import { navigate } from "gatsby-link";
+import { navigate } from "gatsby";
+
 import store from "../store";
+import { setLoading } from "../store/modules/common";
 
 const devUrl = `http://localhost:4000`;
 const pubUrl = ``;
@@ -45,6 +47,7 @@ const isError = e => {
 
 export const getData = async (path, callback) => {
   const headers = checkAuth();
+  store.dispatch(setLoading(true));
   try {
     const res = await axios.get(`${url()}${path}`, {
       headers
@@ -53,10 +56,13 @@ export const getData = async (path, callback) => {
   } catch (e) {
     isError(e);
   }
+  store.dispatch(setLoading(false));
 };
 
 export const postData = async (path, data, callback) => {
   const headers = checkAuth();
+  store.dispatch(setLoading(true));
+
   try {
     const res = await axios.post(`${url()}${path}`, data, {
       headers
@@ -65,10 +71,13 @@ export const postData = async (path, data, callback) => {
   } catch (e) {
     isError(e);
   }
+  store.dispatch(setLoading(false));
 };
 
 export const putData = async (path, data, callback) => {
   const headers = checkAuth();
+  store.dispatch(setLoading(true));
+
   try {
     const res = await axios.put(`${url()}${path}`, data, {
       headers
@@ -77,10 +86,13 @@ export const putData = async (path, data, callback) => {
   } catch (e) {
     isError(e);
   }
+  store.dispatch(setLoading(false));
 };
 
 export const deleteData = async (path, data, callback) => {
   const headers = checkAuth();
+  store.dispatch(setLoading(true));
+
   try {
     const res = await axios.delete(`${url()}${path}`, {
       headers,
@@ -90,22 +102,28 @@ export const deleteData = async (path, data, callback) => {
   } catch (e) {
     isError(e);
   }
+  store.dispatch(setLoading(false));
 };
 
 export const login = async (path, data, callback) => {
+  store.dispatch(setLoading(true));
   try {
     const res = await axios.post(`${url()}${path}`, data);
     return callback(res.data);
   } catch (e) {
     isError(e);
   }
+  store.dispatch(setLoading(false));
 };
 
 export const signup = async (path, fd, callback) => {
+  store.dispatch(setLoading(true));
+
   try {
     const res = await axios.post(`${url()}${path}`, fd);
     return callback(res.data);
   } catch (e) {
     isError(e);
   }
+  store.dispatch(setLoading(false));
 };

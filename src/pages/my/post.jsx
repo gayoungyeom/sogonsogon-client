@@ -3,7 +3,6 @@ import { navigate } from "gatsby";
 
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { useCookies } from "react-cookie";
 
 import { getData } from "../../utils/http";
 import * as userActions from "../../store/modules/user";
@@ -20,7 +19,6 @@ const MyPostPage = ({ location }) => {
   const PER_PAGE = 10;
   const [curPage, setCurPage] = useState(1);
   const [totalCnt, setTotalCnt] = useState(0);
-  const [cookies] = useCookies(["token"]);
 
   const getMyPosts = useCallback(
     page => {

@@ -3,8 +3,7 @@ import { createAction, handleActions } from "redux-actions";
 const SET_TOKEN = "common/GET_TOKEN";
 const SET_REGION_BCODE = "common/SET_REGION_BCODE";
 const SET_SECTOR_NO = "common/SET_SECTOR_NO";
-const SET_NAV_TYPE = "common/SET_NAV_TYPE";
-const IS_LOADING = "common/IS_LOADING";
+const SET_LOADING = "common/SET_LOADING";
 
 export const setToken = createAction(SET_TOKEN, token => token);
 export const setRegionBcode = createAction(
@@ -12,14 +11,12 @@ export const setRegionBcode = createAction(
   regionBcode => regionBcode
 );
 export const setSectorNo = createAction(SET_SECTOR_NO, sectorNo => sectorNo);
-export const setNavType = createAction(SET_NAV_TYPE, navType => navType);
-export const isLoading = createAction(IS_LOADING, isLoading => isLoading);
+export const setLoading = createAction(SET_LOADING, isLoading => isLoading);
 
 const initialState = {
   token: "",
   regionBcode: "",
   sectorNo: "",
-  navType: "first",
   isLoading: false
 };
 
@@ -37,11 +34,7 @@ export default handleActions(
       ...state,
       sectorNo: payload
     }),
-    [SET_NAV_TYPE]: (state, { payload }) => ({
-      ...state,
-      navType: payload
-    }),
-    [IS_LOADING]: (state, { payload }) => ({
+    [SET_LOADING]: (state, { payload }) => ({
       ...state,
       isLoading: payload
     })

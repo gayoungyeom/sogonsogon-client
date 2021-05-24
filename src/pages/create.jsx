@@ -3,7 +3,6 @@ import { navigate } from "gatsby";
 
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { useCookies } from "react-cookie";
 
 import { getData, postData } from "../utils/http";
 import * as boardActions from "../store/modules/board";
@@ -18,8 +17,7 @@ const CreatePage = ({ location }) => {
   const sectorNo = useSelector(({ common }) => common.sectorNo);
   const navNames = useSelector(({ user }) => user.navNames);
   const data = useSelector(({ board }) => board.input).toJS();
-  console.log(data.content);
-  const [cookies] = useCookies(["token"]);
+
   const [curType, setCurType] = useState("first");
 
   const getNavNames = useCallback(() => {
