@@ -13,19 +13,21 @@ import Nav from "../../components/nav";
 const MyInfoPage = ({ location }) => {
   const dispatch = useDispatch();
   const input = useSelector(({ user }) => user.input).toJS();
-  const email = input.email || "";
-  const nickName = input.nickName || "";
+  const nickName = input.nickname || "";
   const password = input.password || "";
   const password2 = input.password2 || "";
 
   const [isChangePw, setIsChangePw] = useState(false); //change pw
+  const [curEmail, setCurEmail] = useState("");
+  const [curNick, setCurNick] = useState("");
 
   const getInfo = useCallback(() => {
     getData(`/user`, data => {
-      dispatch(userActions.setInput({ key: "email", value: data.email }));
-      dispatch(userActions.setInput({ key: "nickName", value: data.nickname }));
+      setCurEmail(data.email);
+      setCurNick(data.nickname);
+      dispatch(userActions.setInput({ key: "nickname", value: data.nickname }));
     });
-  }, [dispatch]);
+  }, [dispatch, setCurNick]);
 
   useEffect(() => {
     getInfo();
@@ -43,6 +45,7 @@ const MyInfoPage = ({ location }) => {
   const editNickName = useCallback(() => {
     putData(`/user/editnickname`, { nickname: nickName }, data => {
       alert(`${data.message}`);
+      setCurNick(nickName);
     });
   }, [nickName]);
 
@@ -85,16 +88,16 @@ const MyInfoPage = ({ location }) => {
           curType={"first"}
         />
         <InfoContainer>
-          <User>{nickName} 님</User>
+          <User>{curNick} 님</User>
           <EmailContainer>
             <EmailCaption>이메일</EmailCaption>
-            <Email>{email}</Email>
+            <Email>{curEmail}</Email>
           </EmailContainer>
           <InputContainer>
             <OneInput>
               <InputCaption>닉네임</InputCaption>
               <InputNick
-                name="nickName"
+                name="nickname"
                 value={nickName}
                 onChange={onChangeInput}
               />

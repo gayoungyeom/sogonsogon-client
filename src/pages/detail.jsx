@@ -162,7 +162,7 @@ const DetailPage = ({ location }) => {
     if (window.confirm(`해당 게시글을 삭제하시겠습니까?`)) {
       deleteData(`/board?board_no=${postNo}`, {}, data => {
         alert(`${data.message}`);
-        navigate("/all");
+        navigate("/all/region");
       });
     }
   }, [postNo]);

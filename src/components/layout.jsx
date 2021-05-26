@@ -54,25 +54,32 @@ const Layout = ({ children, isShow, isBack }) => {
   return (
     <>
       <GlobalStyles />
-      <Body isShow={isShow}>
-        {isLoading ? (
-          <div
-            style={{
-              height: "500px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center"
-            }}
-          >
-            <Loading type="spin" color="#5c3ec2" height="150px" width="150px" />
-          </div>
-        ) : (
-          <>
-            {isShow && <Header isBack={isBack} />}
-            <main>{children}</main>
-          </>
-        )}
-      </Body>
+      {cookies["token"] && (
+        <Body isShow={isShow}>
+          {isLoading ? (
+            <div
+              style={{
+                height: "500px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+            >
+              <Loading
+                type="spin"
+                color="#5c3ec2"
+                height="150px"
+                width="150px"
+              />
+            </div>
+          ) : (
+            <>
+              {isShow && <Header isBack={isBack} />}
+              <main>{children}</main>
+            </>
+          )}
+        </Body>
+      )}
     </>
   );
 };
